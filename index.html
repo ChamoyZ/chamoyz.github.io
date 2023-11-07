@@ -20,7 +20,7 @@
         body {
             margin: 0;
             font-family: Mali;
-            font-size: 17px;
+            font-size: 15px;
             background-color: black;
             font-family: "Mali", sans-serif;
         }
@@ -45,7 +45,7 @@
         }
         
         .ml13 {
-            font-size: 3em;
+            font-size: 2em;
             text-transform: uppercase;
             letter-spacing: 0.1em;
             font-weight: 600;
@@ -58,12 +58,17 @@
         }
         
         .content-social {
-            position: fixed;
-            bottom: 0;
-            color: #f1f1f1;
-            width: 100%;
-            padding: 20px;
-        }
+		  display: flex;
+		  flex-direction: column; /* Stack children vertically */
+		  justify-content: center; /* Vertically center the content */
+		  align-items: center; /* Horizontally center the content */
+		  position: fixed;
+		  bottom: 0;
+		  color: #f1f1f1;
+		  width: 100%;
+		  padding: 20px;
+		}
+
         
         .btn-check:focus+.btn,
         .btn:focus {
@@ -96,7 +101,7 @@
         animation-direction: normal, alternate;" src="https://cdn.discordapp.com/attachments/990550156397146132/1171490878259474555/cat.png" alt="Artist">
             <div>
                 <h1 class="ml13">
-                    <span class="letter" style="opacity: 1; transform: translateY(0px) translateZ(0px);">ChamoyBio</span>
+                    <span class="letter" style="opacity: 0.5; transform: translateY(0px) translateZ(0px);">ChamoyBio</span>
                     <span class="letter" style="opacity: 1; transform: translateY(0px) translateZ(0px);"></span>
                     <span class="letter" style="opacity: 1; transform: translateY(0px) translateZ(0px);"></span>
                     <span class="letter" style="opacity: 1; transform: translateY(0px) translateZ(0px);"></span>
