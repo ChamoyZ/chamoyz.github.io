@@ -6,31 +6,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>ChamoyBio 🎮✨</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" />
-    <link href="https://fonts.googleapis.com/css2?family=Mali&display=swap" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Mali:wght@400;700&display=swap" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/2.0.2/anime.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <style>
+        /* --- Variables --- */
+        :root {
+            --glow-color: rgba(243, 156, 18, 0.7);
+            --glow-color-profile: rgba(255, 193, 7, 0.6);
+            --primary-text: white;
+            --hover-color: #f39c12;
+            /* --container-bg: rgba(25, 25, 25, 0.65); */ /* <-- ไม่ได้ใช้แล้ว */
+        }
+
+        /* --- Base Body Styles --- */
         body {
             margin: 0;
             font-family: 'Mali', sans-serif;
             background-color: black;
-            color: white;
+            color: var(--primary-text);
             text-align: center;
-            overflow: hidden;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             position: relative;
+            padding: 20px;
+            overflow: hidden;
         }
 
+        /* --- Background GIF Layer --- */
         body::before {
             content: "";
             position: fixed;
@@ -39,9 +47,39 @@
             width: 100%;
             height: 100%;
             background: url('https://wallpaperxyz.com/wp-content/uploads/Gif-Animated-Wallpaper-Background-Full-HD-Free-Download-for-PC-Macbook-261121-Wallpaperxyz.com-19.gif') no-repeat center center/cover;
-            filter: blur(2px) brightness(60%);
+            filter: blur(3px) brightness(45%);
+            z-index: -2;
+        }
+
+        /* --- Particles Container --- */
+        #tsparticles {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
             z-index: -1;
         }
+
+        /* --- Main Content Container (UPDATED BACKGROUND) --- */
+        .main-container {
+            /* เปลี่ยน background-color เป็น background gradient */
+            background: linear-gradient(135deg, rgba(40, 40, 40, 0.75), rgba(30, 240, 255, 0.397)); /* ไล่สีเทาเข้มเฉียงๆ */
+
+            padding: 30px 40px;
+            border-radius: 15px;
+            /* ปรับปรุงเงา และ เส้นขอบ */
+            box-shadow: 0 5px 40px rgba(0, 0, 0, 0.75); /* เงาชัดขึ้นเล็กน้อย */
+            max-width: 600px;
+            width: 90%;
+            backdrop-filter: blur(6px); /* เอฟเฟกต์กระจกฝ้า */
+            -webkit-backdrop-filter: blur(6px); /* สำหรับ Safari */
+            border: 1.5px solid rgba(255, 255, 255, 0.2); /* ขอบหนาขึ้นและสว่างขึ้นเล็กน้อย */
+            position: relative; /* ให้ content อยู่เหนือ particles */
+            z-index: 1;
+        }
+        /* --- End Main Content Container Update --- */
+
 
         .content {
             display: flex;
@@ -49,117 +87,269 @@
             align-items: center;
         }
 
+        /* --- Profile Image & Frame Styling --- */
+        .profile-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin-bottom: 20px;
+            transition: transform 0.4s ease-out, filter 0.4s ease-out;
+            animation: bounce 2.5s infinite ease-in-out;
+            display: inline-block;
+            filter: drop-shadow(0 0 10px var(--glow-color-profile));
+        }
+
+        .profile-container:hover {
+            transform: scale(1.1) rotate(3deg);
+            filter: drop-shadow(0 0 18px var(--glow-color));
+        }
+
         .profile-img {
-            width: 150px;
+            display: block;
+            width: 135px;
+            height: 135px;
+            object-fit: cover;
             border-radius: 50%;
-            box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.6);
-            transition: transform 0.3s;
-            animation: bounce 2s infinite;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 0;
         }
 
-        .profile-img:hover {
-            transform: scale(1.1) rotate(5deg);
+        .profile-frame {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            /* src is set by JS */
         }
+        /* --- End Profile Image & Frame Styling --- */
 
+        /* --- Bounce Animation --- */
         @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-12px) scale(1.02); }
         }
 
+        /* --- Title Styles --- */
+        h1 {
+            font-weight: 700;
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 0 0 12px rgba(255, 255, 255, 0.6);
+            opacity: 0;
+        }
+
+        /* --- Anime.js Letter Styling --- */
+        h1 .letter {
+          display: inline-block;
+          line-height: 1em;
+          opacity: 0;
+        }
+
+        /* --- Typing Effect Styles --- */
+        .typing-effect {
+            font-size: 1.1rem;
+            min-height: 1.5em;
+            white-space: nowrap;
+            overflow: hidden;
+            display: inline-block;
+            margin-top: 10px;
+            margin-bottom: 25px;
+            letter-spacing: 1px;
+            border-right: 3px solid transparent;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+        }
+
+        /* --- Social Links Styles --- */
         .social-links {
             display: flex;
-            gap: 15px;
+            gap: 20px;
             flex-wrap: wrap;
             justify-content: center;
             margin-top: 20px;
         }
 
         .social-links a {
-            color: white;
-            font-size: 1.8rem;
-            transition: transform 0.3s;
+            color: var(--primary-text);
+            font-size: 2rem;
+            transition: transform 0.3s ease, color 0.3s ease, filter 0.3s ease;
+            padding: 5px;
+            filter: drop-shadow(0 0 3px rgba(255,255,255,0.4));
         }
 
         .social-links a:hover {
-            transform: scale(1.2);
-            color: #f39c12;
+            transform: scale(1.25) translateY(-5px) rotate(-5deg);
+            color: var(--hover-color);
+            filter: drop-shadow(0 0 8px var(--glow-color));
         }
 
-        .typing-effect {
-            font-size: 1.2rem;
+        /* --- Music Note Style --- */
+        .music-note {
+            margin-top: 30px;
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+            font-style: italic;
+            text-shadow: 0 0 3px rgba(0,0,0,0.5);
+        }
+
+        /* --- Tooltip Customization --- */
+        .tooltip-inner {
+            background-color: var(--hover-color);
+            color: black;
+            font-family: 'Mali', sans-serif;
             font-weight: bold;
-            border-right: 2px solid white;
-            white-space: nowrap;
-            overflow: hidden;
-            display: inline-block;
-            margin-top: 10px;
+            padding: 5px 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
         }
+        .tooltip.bs-tooltip-top .tooltip-arrow::before { border-top-color: var(--hover-color); }
+        .tooltip.bs-tooltip-bottom .tooltip-arrow::before { border-bottom-color: var(--hover-color); }
+        .tooltip.bs-tooltip-start .tooltip-arrow::before { border-left-color: var(--hover-color); }
+        .tooltip.bs-tooltip-end .tooltip-arrow::before { border-right-color: var(--hover-color); }
 
+
+        /* --- Media Queries --- */
         @media (max-width: 768px) {
-            .profile-img {
-                width: 120px;
-            }
-            .typing-effect {
-                font-size: 1rem;
-            }
-            .social-links a {
-                font-size: 1.5rem;
-            }
+            h1 { font-size: 2.2rem; }
+            .profile-container { width: 170px; height: 170px; }
+            .profile-img { width: 110px; height: 110px; }
+            .typing-effect { font-size: 1rem; }
+            .social-links a { font-size: 1.8rem; }
+            .main-container { padding: 25px 20px; }
         }
+         @media (max-width: 480px) {
+            h1 { font-size: 1.8rem; }
+             .profile-container { width: 150px; height: 150px; }
+             .profile-img { width: 95px; height: 95px; }
+             .typing-effect { font-size: 0.9rem; min-height: 1.3em; }
+             .social-links { gap: 15px; }
+             .social-links a { font-size: 1.6rem; }
+         }
     </style>
 </head>
 
 <body>
-    <div class="content">
-        <img class="profile-img" src="https://i.imgur.com/4kHL0lN.jpeg" alt="Profile">
-        <h1>ChamoyBio</h1>
-        <p class="typing-effect" id="typing"></p>
-        <div class="social-links">
-            <a href="https://github.com/chamoys" target="_blank"><i class="bi bi-github"></i></a>
-            <a href="https://www.facebook.com/nc.cmz" target="_blank"><i class="bi bi-facebook"></i></a>
-            <a href="https://discord.gg/23rDQTy9NN" target="_blank"><i class="bi bi-discord"></i></a>
-            <a href="https://www.tiktok.com/@nc.cmz___" target="_blank"><i class="bi bi-tiktok"></i></a>
-            <a href="https://ezdn.app/ChamoyZ" target="_blank"><i class="bi bi-piggy-bank"></i></a>
+    <!-- Particles background -->
+    <div id="tsparticles"></div>
+
+    <!-- Main Content Container -->
+    <div class="main-container" data-aos="fade-up" data-aos-duration="800">
+        <div class="content">
+
+            <!-- Profile Picture with Frame Container -->
+            <div class="profile-container" data-aos="zoom-in" data-aos-delay="200">
+                <!-- Your actual profile picture (background layer) -->
+                <img class="profile-img" src="https://media.discordapp.net/attachments/1218666257218277427/1347292259389018122/fafafafaf.gif?ex=6809ea72&is=680898f2&hm=3f4534b8011f92d8a103b9b86d09a9bd02e40add7516a398320ba7b4e0fb7074&=&width=648&height=648" alt="Profile">
+                <!-- The frame image (overlay layer) - src will be set by JavaScript -->
+                <img class="profile-frame" src="" alt="Profile Frame">
+            </div>
+
+            <!-- Title -->
+            <h1 class="ml11">
+              <span class="text-wrapper">
+                <span class="line line1"></span>
+                <span class="letters">ChamoyBio</span>
+              </span>
+            </h1>
+
+            <!-- Typing Effect Paragraph -->
+            <p class="typing-effect" id="typing" data-aos="fade-up" data-aos-delay="600"></p>
+
+            <!-- Social Media Links -->
+            <div class="social-links" data-aos="fade-up" data-aos-delay="700">
+                <a href="https://github.com/chamoys" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" title="GitHub" data-aos="fade-up" data-aos-delay="800"><i class="bi bi-github"></i></a>
+                <a href="https://www.facebook.com/nc.cmz" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" title="Facebook" data-aos="fade-up" data-aos-delay="900"><i class="bi bi-facebook"></i></a>
+                <a href="https://discord.gg/23rDQTy9NN" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" title="Discord Server" data-aos="fade-up" data-aos-delay="1000"><i class="bi bi-discord"></i></a>
+                <a href="https://www.tiktok.com/@nc.cmz___" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" title="TikTok" data-aos="fade-up" data-aos-delay="1100"><i class="bi bi-tiktok"></i></a>
+                <a href="https://ezdn.app/ChamoyZ" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" title="Donate" data-aos="fade-up" data-aos-delay="1200"><i class="bi bi-piggy-bank-fill"></i></a>
+            </div>
+
+            <!-- Music Note -->
+             <p class="music-note" data-aos="fade-up" data-aos-delay="1300">คลิกที่หน้าจอเพื่อเล่นเพลงประกอบ 🎵</p>
         </div>
     </div>
 
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.12.0/tsparticles.bundle.min.js"></script>
+
     <script>
-        $(document).ready(function() {
-            var audio = new Audio("https://cdn.discordapp.com/attachments/990550156397146132/1171491474098110535/music.mp3");
-            $(document).one("click", function() {
-                audio.play();
-                audio.volume = 0.2;
+        $(document).ready(function() { // <-- jQuery ready function wrapper
+
+            // --- Random Profile Frame Logic ---
+            const frameUrls = [
+                "https://cdn.jsdelivr.net/gh/itspi3141/discord-fake-avatar-decorations@main/public/decorations/copium.png",
+                "https://cdn.jsdelivr.net/gh/itspi3141/discord-fake-avatar-decorations@main/public/decorations/trash.png",
+                "https://cdn.jsdelivr.net/gh/itspi3141/discord-fake-avatar-decorations@main/public/decorations/grass_toucher.png",
+                "https://cdn.jsdelivr.net/gh/itspi3141/discord-fake-avatar-decorations@main/public/decorations/press_f_black.png",
+                "https://cdn.jsdelivr.net/gh/itspi3141/discord-fake-avatar-decorations@main/public/decorations/press_f_white.png",
+                "https://cdn.jsdelivr.net/gh/itspi3141/discord-fake-avatar-decorations@main/public/decorations/git_gud.png",
+                "https://cdn.jsdelivr.net/gh/itspi3141/discord-fake-avatar-decorations@main/public/decorations/ggez.png",
+                "https://cdn.jsdelivr.net/gh/itspi3141/discord-fake-avatar-decorations@main/public/decorations/questionable.png",
+                // >>> เพิ่ม URL ของกรอบอื่นๆ ที่คุณต้องการตรงนี้ <<<
+            ];
+
+            const randomIndex = Math.floor(Math.random() * frameUrls.length);
+            const randomFrameUrl = frameUrls[randomIndex];
+            const frameElement = $('.profile-frame');
+            if (frameElement.length) {
+                frameElement.attr('src', randomFrameUrl);
+            }
+            // --- End Random Profile Frame Logic ---
+
+
+            // Initialize AOS
+            AOS.init({ once: true, duration: 600, easing: 'ease-out-quad' });
+
+            // Initialize Bootstrap Tooltips
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) { return new bootstrap.Tooltip(tooltipTriggerEl) })
+
+            // --- MP3 Audio Player Logic ---
+            var audio = new Audio("https://cdn.discordapp.com/attachments/990550156397146132/1171491474098110535/music.mp3"); // <<< เปลี่ยน URL เพลง
+            audio.loop = true;
+            var played = false;
+            $(document).one("click pointerdown", function() {
+                if (!played) { audio.play().catch(e => {}); audio.volume = 0.15; played = true; }
             });
-        });
-        AOS.init();
 
-        const phrases = ["Discord: nc._", "ไม่มีใครดีเท่าแม่มึงแล้ว 🐻", "ChamoyBio 💖"]; 
-        let phraseIndex = 0;
-        let charIndex = 0;
-        let typingElement = document.getElementById("typing");
+            // --- Typing Effect Logic ---
+            const phrases = ["Discord: nc._", "ไม่มีใครดีเท่าแม่มึงแล้ว 🐻", "ChamoyBio 💖"];
+            let phraseIndex = 0, charIndex = 0, isErasing = false, cursorInterval;
+            let typingElement = document.getElementById("typing");
+             function blinkCursor() { if (!cursorInterval) { cursorInterval = setInterval(() => { typingElement.style.borderRightColor = (!isErasing && typingElement.style.borderRightColor === 'transparent') ? 'var(--primary-text)' : (isErasing ? 'var(--primary-text)' : 'transparent'); }, 500); } }
+             function typeText() { isErasing = false; typingElement.style.borderRightColor = 'var(--primary-text)'; if (charIndex < phrases[phraseIndex].length) { typingElement.innerHTML += phrases[phraseIndex].charAt(charIndex++); setTimeout(typeText, 100); } else { setTimeout(eraseText, 2500); } }
+             function eraseText() { isErasing = true; if (charIndex > 0) { typingElement.innerHTML = phrases[phraseIndex].substring(0, --charIndex); setTimeout(eraseText, 60); } else { phraseIndex = (phraseIndex + 1) % phrases.length; isErasing = false; setTimeout(typeText, 500); } }
+            setTimeout(() => { typeText(); blinkCursor(); }, 1400);
 
-        function typeText() {
-            if (charIndex < phrases[phraseIndex].length) {
-                typingElement.innerHTML += phrases[phraseIndex].charAt(charIndex);
-                charIndex++;
-                setTimeout(typeText, 100);
-            } else {
-                setTimeout(eraseText, 2000);
-            }
-        }
 
-        function eraseText() {
-            if (charIndex > 0) {
-                typingElement.innerHTML = phrases[phraseIndex].substring(0, charIndex - 1);
-                charIndex--;
-                setTimeout(eraseText, 50);
-            } else {
-                phraseIndex = (phraseIndex + 1) % phrases.length;
-                setTimeout(typeText, 500);
-            }
-        }
-        typeText();
+            // --- Anime.js Title Animation ---
+            var textWrapper = document.querySelector('.ml11 .letters');
+             if(textWrapper) {
+                 textWrapper.innerHTML = textWrapper.textContent.replace(/([^\x00-\x80]|\w)/g, "<span class='letter'>$&</span>");
+                 document.querySelector('h1').style.opacity = 1;
+                 anime.timeline({ loop: false })
+                   .add({ targets: '.ml11 .line', scaleY: [0,1], opacity: [0.5,1], easing: "easeOutExpo", duration: 700 })
+                   .add({ targets: '.ml11 .line', translateX: [0, document.querySelector('.ml11 .letters').getBoundingClientRect().width + 10], easing: "easeOutExpo", duration: 700, delay: 100 })
+                   .add({ targets: '.ml11 .letter', opacity: [0,1], easing: "easeOutExpo", duration: 600, offset: '-=775', delay: (el, i) => 34 * (i+1) })
+                   .add({ targets: '.ml11 .line', opacity: 0, duration: 500, easing: "easeOutExpo", delay: 500 });
+             } else { var h1 = document.querySelector('h1'); if(h1) h1.style.opacity = 1; }
+
+
+            // --- tsParticles Initialization ---
+            tsParticles.load("tsparticles", {
+                fpsLimit: 60, interactivity: { events: { onHover: { enable: true, mode: "repulse" }, onClick: { enable: true, mode: "push" }, resize: true }, modes: { repulse: { distance: 100, duration: 0.4 }, push: { quantity: 4 } } }, particles: { color: { value: ["#ffffff", "#f39c12", "#e0e0e0"] }, links: { color: "#ffffff", distance: 150, enable: true, opacity: 0.2, width: 1 }, collisions: { enable: false }, move: { direction: "none", enable: true, outModes: { default: "bounce" }, random: true, speed: 1.5, straight: false }, number: { density: { enable: true, area: 800 }, value: 60 }, opacity: { value: { min: 0.1, max: 0.6 }, anim: { enable: true, speed: 0.5, opacity_min: 0.1, sync: false } }, shape: { type: "circle" }, size: { value: { min: 1, max: 3 }, anim: { enable: true, speed: 2, size_min: 0.5, sync: false } } }, detectRetina: true
+            });
+
+        }); // <-- End of $(document).ready()
     </script>
 </body>
-
 </html>
