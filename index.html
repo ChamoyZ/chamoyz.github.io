@@ -18,7 +18,6 @@
             --glow-color-profile: rgba(255, 193, 7, 0.6);
             --primary-text: white;
             --hover-color: #f39c12;
-            /* --container-bg: rgba(25, 25, 25, 0.65); */ /* <-- ไม่ได้ใช้แล้ว */
         }
 
         /* --- Base Body Styles --- */
@@ -63,23 +62,18 @@
 
         /* --- Main Content Container (UPDATED BACKGROUND) --- */
         .main-container {
-            /* เปลี่ยน background-color เป็น background gradient */
-            background: linear-gradient(135deg, rgba(40, 40, 40, 0.75), rgba(30, 240, 255, 0.397)); /* ไล่สีเทาเข้มเฉียงๆ */
-
+            background: linear-gradient(135deg, rgba(40, 40, 40, 0.75), rgba(30, 240, 255, 0.397));
             padding: 30px 40px;
             border-radius: 15px;
-            /* ปรับปรุงเงา และ เส้นขอบ */
-            box-shadow: 0 5px 40px rgba(0, 0, 0, 0.75); /* เงาชัดขึ้นเล็กน้อย */
+            box-shadow: 0 5px 40px rgba(0, 0, 0, 0.75);
             max-width: 600px;
             width: 90%;
-            backdrop-filter: blur(6px); /* เอฟเฟกต์กระจกฝ้า */
-            -webkit-backdrop-filter: blur(6px); /* สำหรับ Safari */
-            border: 1.5px solid rgba(255, 255, 255, 0.2); /* ขอบหนาขึ้นและสว่างขึ้นเล็กน้อย */
-            position: relative; /* ให้ content อยู่เหนือ particles */
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            border: 1.5px solid rgba(255, 255, 255, 0.2);
+            position: relative;
             z-index: 1;
         }
-        /* --- End Main Content Container Update --- */
-
 
         .content {
             display: flex;
@@ -125,17 +119,13 @@
             height: 100%;
             pointer-events: none;
             z-index: 1;
-            /* src is set by JS */
         }
-        /* --- End Profile Image & Frame Styling --- */
 
-        /* --- Bounce Animation --- */
         @keyframes bounce {
             0%, 100% { transform: translateY(0) scale(1); }
             50% { transform: translateY(-12px) scale(1.02); }
         }
 
-        /* --- Title Styles --- */
         h1 {
             font-weight: 700;
             font-size: 2.8rem;
@@ -144,14 +134,12 @@
             opacity: 0;
         }
 
-        /* --- Anime.js Letter Styling --- */
         h1 .letter {
           display: inline-block;
           line-height: 1em;
           opacity: 0;
         }
 
-        /* --- Typing Effect Styles --- */
         .typing-effect {
             font-size: 1.1rem;
             min-height: 1.5em;
@@ -165,7 +153,6 @@
             text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
         }
 
-        /* --- Social Links Styles --- */
         .social-links {
             display: flex;
             gap: 20px;
@@ -188,7 +175,6 @@
             filter: drop-shadow(0 0 8px var(--glow-color));
         }
 
-        /* --- Music Note Style --- */
         .music-note {
             margin-top: 30px;
             font-size: 0.8rem;
@@ -197,7 +183,6 @@
             text-shadow: 0 0 3px rgba(0,0,0,0.5);
         }
 
-        /* --- Tooltip Customization --- */
         .tooltip-inner {
             background-color: var(--hover-color);
             color: black;
@@ -212,28 +197,37 @@
         .tooltip.bs-tooltip-start .tooltip-arrow::before { border-left-color: var(--hover-color); }
         .tooltip.bs-tooltip-end .tooltip-arrow::before { border-right-color: var(--hover-color); }
 
+        /* --- Ribbon specific (top-left) --- */
+        .black-ribbon-top-left {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 80px;
+            opacity: 0.9;
+            z-index: 9999;
+            pointer-events: none;
+            user-select: none;
+        }
 
-        /* --- Media Queries --- */
-        @media (max-width: 768px) {
-            h1 { font-size: 2.2rem; }
-            .profile-container { width: 170px; height: 170px; }
-            .profile-img { width: 110px; height: 110px; }
-            .typing-effect { font-size: 1rem; }
-            .social-links a { font-size: 1.8rem; }
+        /* Responsive scaling for small screens */
+        @media (max-width: 480px) {
+            .black-ribbon-top-left { width: 60px; }
+            h1 { font-size: 1.8rem; }
+            .profile-container { width: 150px; height: 150px; }
+            .profile-img { width: 95px; height: 95px; }
+            .typing-effect { font-size: 0.9rem; min-height: 1.3em; }
+            .social-links { gap: 15px; }
+            .social-links a { font-size: 1.6rem; }
             .main-container { padding: 25px 20px; }
         }
-         @media (max-width: 480px) {
-            h1 { font-size: 1.8rem; }
-             .profile-container { width: 150px; height: 150px; }
-             .profile-img { width: 95px; height: 95px; }
-             .typing-effect { font-size: 0.9rem; min-height: 1.3em; }
-             .social-links { gap: 15px; }
-             .social-links a { font-size: 1.6rem; }
-         }
     </style>
 </head>
 
 <body>
+    <!-- Black ribbon top-left (added) -->
+    <img src="https://raw.githubusercontent.com/appzstory/appzstory-ribbon/main/black_ribbon_top_left.png"
+         alt="Black ribbon" class="black-ribbon-top-left" aria-hidden="true">
+
     <!-- Particles background -->
     <div id="tsparticles"></div>
 
@@ -243,15 +237,9 @@
 
             <!-- Profile Picture with Frame Container -->
             <div class="profile-container" data-aos="zoom-in" data-aos-delay="200">
-                <!-- Your actual profile picture (background layer) -->
                 <img class="profile-img" src="https://img5.pic.in.th/file/secure-sv1/32256612_1417499371729311_2435113128162230272_n.jpg" alt="Profile">
-                <!-- The frame image (overlay layer) - src will be set by JavaScript -->
                 <img class="profile-frame" src="" alt="Profile Frame">
             </div>
-            
-            <img src="https://raw.githubusercontent.com/appzstory/appzstory-ribbon/main/black_ribbon_top_left.png" 
-     alt="Black Ribbon Top Left" 
-     style="position:fixed; top:0; left:0; width:80px; opacity:0.9; z-index:9999; pointer-events:none;">
 
             <!-- Title -->
             <h1 class="ml11">
@@ -286,7 +274,7 @@
     <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.12.0/tsparticles.bundle.min.js"></script>
 
     <script>
-        $(document).ready(function() { // <-- jQuery ready function wrapper
+        $(document).ready(function() {
 
             // --- Random Profile Frame Logic ---
             const frameUrls = [
@@ -298,7 +286,6 @@
                 "https://cdn.jsdelivr.net/gh/itspi3141/discord-fake-avatar-decorations@main/public/decorations/git_gud.png",
                 "https://cdn.jsdelivr.net/gh/itspi3141/discord-fake-avatar-decorations@main/public/decorations/ggez.png",
                 "https://cdn.jsdelivr.net/gh/itspi3141/discord-fake-avatar-decorations@main/public/decorations/questionable.png",
-                // >>> เพิ่ม URL ของกรอบอื่นๆ ที่คุณต้องการตรงนี้ <<<
             ];
 
             const randomIndex = Math.floor(Math.random() * frameUrls.length);
@@ -307,8 +294,6 @@
             if (frameElement.length) {
                 frameElement.attr('src', randomFrameUrl);
             }
-            // --- End Random Profile Frame Logic ---
-
 
             // Initialize AOS
             AOS.init({ once: true, duration: 600, easing: 'ease-out-quad' });
@@ -318,7 +303,7 @@
             var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) { return new bootstrap.Tooltip(tooltipTriggerEl) })
 
             // --- MP3 Audio Player Logic ---
-            var audio = new Audio("https://cdn.discordapp.com/attachments/990550156397146132/1171491474098110535/music.mp3"); // <<< เปลี่ยน URL เพลง
+            var audio = new Audio("https://cdn.discordapp.com/attachments/990550156397146132/1171491474098110535/music.mp3");
             audio.loop = true;
             var played = false;
             $(document).one("click pointerdown", function() {
@@ -334,7 +319,6 @@
              function eraseText() { isErasing = true; if (charIndex > 0) { typingElement.innerHTML = phrases[phraseIndex].substring(0, --charIndex); setTimeout(eraseText, 60); } else { phraseIndex = (phraseIndex + 1) % phrases.length; isErasing = false; setTimeout(typeText, 500); } }
             setTimeout(() => { typeText(); blinkCursor(); }, 1400);
 
-
             // --- Anime.js Title Animation ---
             var textWrapper = document.querySelector('.ml11 .letters');
              if(textWrapper) {
@@ -347,13 +331,12 @@
                    .add({ targets: '.ml11 .line', opacity: 0, duration: 500, easing: "easeOutExpo", delay: 500 });
              } else { var h1 = document.querySelector('h1'); if(h1) h1.style.opacity = 1; }
 
-
             // --- tsParticles Initialization ---
             tsParticles.load("tsparticles", {
                 fpsLimit: 60, interactivity: { events: { onHover: { enable: true, mode: "repulse" }, onClick: { enable: true, mode: "push" }, resize: true }, modes: { repulse: { distance: 100, duration: 0.4 }, push: { quantity: 4 } } }, particles: { color: { value: ["#ffffff", "#f39c12", "#e0e0e0"] }, links: { color: "#ffffff", distance: 150, enable: true, opacity: 0.2, width: 1 }, collisions: { enable: false }, move: { direction: "none", enable: true, outModes: { default: "bounce" }, random: true, speed: 1.5, straight: false }, number: { density: { enable: true, area: 800 }, value: 60 }, opacity: { value: { min: 0.1, max: 0.6 }, anim: { enable: true, speed: 0.5, opacity_min: 0.1, sync: false } }, shape: { type: "circle" }, size: { value: { min: 1, max: 3 }, anim: { enable: true, speed: 2, size_min: 0.5, sync: false } } }, detectRetina: true
             });
 
-        }); // <-- End of $(document).ready()
+        });
     </script>
 </body>
 </html>
