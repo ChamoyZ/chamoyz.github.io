@@ -1,342 +1,282 @@
-<!DOCTYPE html>
-<html lang="en">
-
+<!doctype html>
+<html lang="th">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>ChamoyBio 🎮✨</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Mali:wght@400;700&display=swap" rel="stylesheet" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <style>
-        /* --- Variables --- */
-        :root {
-            --glow-color: rgba(243, 156, 18, 0.7);
-            --glow-color-profile: rgba(255, 193, 7, 0.6);
-            --primary-text: white;
-            --hover-color: #f39c12;
-        }
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ChamoyBio ⚡️ — CYBER EDITION (Responsive)</title>
+  <meta name="description" content="ChamoyBio — หน้าโปรไฟล์ไซเบอร์เท่สุด ๆ สำหรับ GitHub Pages (ปรับแต่งให้ตอบสนองทั้ง PC & Mobile)" />
+  <meta name="theme-color" content="#0b0710" />
 
-        /* --- Base Body Styles --- */
-        body {
-            margin: 0;
-            font-family: 'Mali', sans-serif;
-            background-color: black;
-            color: var(--primary-text);
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            position: relative;
-            padding: 20px;
-            overflow: hidden;
-        }
+  <!-- Open Graph -->
+  <meta property="og:title" content="ChamoyBio ⚡️ — CYBER EDITION" />
+  <meta property="og:description" content="หน้าโปรไฟล์ไซเบอร์เท่สุด ๆ — Neon, Glitch, Particles, และเพลง" />
+  <meta property="og:image" content="https://img5.pic.in.th/file/secure-sv1/32256612_1417499371729311_2435113128162230272_n.jpg" />
 
-        /* --- Background GIF Layer --- */
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url('https://wallpaperxyz.com/wp-content/uploads/Gif-Animated-Wallpaper-Background-Full-HD-Free-Download-for-PC-Macbook-261121-Wallpaperxyz.com-19.gif') no-repeat center center/cover;
-            filter: blur(3px) brightness(45%);
-            z-index: -2;
-        }
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Mali:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 
-        /* --- Particles Container --- */
-        #tsparticles {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            z-index: -1;
-        }
+  <!-- Bootstrap icons + AOS + anime.js + tsParticles -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
-        /* --- Main Content Container (UPDATED BACKGROUND) --- */
-        .main-container {
-            background: linear-gradient(135deg, rgba(40, 40, 40, 0.75), rgba(30, 240, 255, 0.397));
-            padding: 30px 40px;
-            border-radius: 15px;
-            box-shadow: 0 5px 40px rgba(0, 0, 0, 0.75);
-            max-width: 600px;
-            width: 90%;
-            backdrop-filter: blur(6px);
-            -webkit-backdrop-filter: blur(6px);
-            border: 1.5px solid rgba(255, 255, 255, 0.2);
-            position: relative;
-            z-index: 1;
-        }
+  <style>
+    :root{
+      --bg:#040207;
+      --card: rgba(255,255,255,0.04);
+      --neon1: #00e5ff;
+      --neon2: #ff3d81;
+      --accent: #f39c12;
+      --glass-border: rgba(255,255,255,0.06);
+      --text: #e8f1ff;
+      --max-card-width: 920px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:'Mali', 'JetBrains Mono', system-ui, -apple-system, 'Segoe UI', Roboto, Arial}
+    body{background:radial-gradient(1200px 600px at 10% 10%, rgba(0,50,80,0.08), transparent), var(--bg);color:var(--text);display:flex;align-items:center;justify-content:center;padding:28px;overflow:auto}
 
-        .content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+    /* Respect users who prefer reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      * { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+    }
 
-        /* --- Profile Image & Frame Styling --- */
-        .profile-container {
-            position: relative;
-            width: 200px;
-            height: 200px;
-            margin-bottom: 20px;
-            transition: transform 0.4s ease-out, filter 0.4s ease-out;
-            animation: bounce 2.5s infinite ease-in-out;
-            display: inline-block;
-            filter: drop-shadow(0 0 10px var(--glow-color-profile));
-        }
+    /* scanlines */
+    body::after{content:'';position:fixed;inset:0;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px);background-size:100% 6px;mix-blend-mode:overlay}
 
-        .profile-container:hover {
-            transform: scale(1.1) rotate(3deg);
-            filter: drop-shadow(0 0 18px var(--glow-color));
-        }
+    /* animated galaxy layer */
+    #bg-blob{position:fixed;inset:-20% -10% auto -10%;width:140%;height:140%;z-index:-4;filter:blur(80px);opacity:0.9;pointer-events:none}
 
-        .profile-img {
-            display: block;
-            width: 135px;
-            height: 135px;
-            object-fit: cover;
-            border-radius: 50%;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 0;
-        }
+    /* particles */
+    #tsparticles{position:fixed;inset:0;z-index:-3}
 
-        .profile-frame {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1;
-        }
+    /* main card */
+    .card{width:clamp(320px, 92%, var(--max-card-width));max-width:var(--max-card-width);border-radius:16px;padding:22px;border:1px solid var(--glass-border);background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));backdrop-filter: blur(8px);box-shadow: 0 20px 60px rgba(2,6,23,0.7);position:relative;overflow:hidden}
 
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0) scale(1); }
-            50% { transform: translateY(-12px) scale(1.02); }
-        }
+    /* neon frame */
+    .neon-frame{position:absolute;inset:0;border-radius:16px;padding:2px;pointer-events:none;mix-blend-mode:screen}
+    .neon-frame:before{content:'';position:absolute;inset:2px;border-radius:14px;background:linear-gradient(90deg,var(--neon1),var(--neon2));filter:blur(28px);opacity:0.22}
+    .neon-frame:after{content:'';position:absolute;inset:12px;border-radius:10px;box-shadow:inset 0 0 40px rgba(0,0,0,0.6)}
 
-        h1 {
-            font-weight: 700;
-            font-size: 2.8rem;
-            margin-bottom: 10px;
-            text-shadow: 0 0 12px rgba(255, 255, 255, 0.6);
-            opacity: 0;
-        }
+    .top-row{display:flex;gap:18px;align-items:center;justify-content:space-between}
 
-        h1 .letter {
-          display: inline-block;
-          line-height: 1em;
-          opacity: 0;
-        }
+    .profile{display:flex;gap:18px;align-items:center}
+    .avatar-wrap{position:relative;width:160px;height:160px;flex:0 0 160px}
+    .avatar{width:120px;height:120px;border-radius:50%;object-fit:cover;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);box-shadow:0 10px 40px rgba(0,0,0,0.6);border:4px solid rgba(255,255,255,0.04)}
+    .avatar-border{position:absolute;inset:0;border-radius:50%;pointer-events:none}
+    .avatar-border svg{width:100%;height:100%}
 
-        .typing-effect {
-            font-size: 1.1rem;
-            min-height: 1.5em;
-            white-space: nowrap;
-            overflow: hidden;
-            display: inline-block;
-            margin-top: 10px;
-            margin-bottom: 25px;
-            letter-spacing: 1px;
-            border-right: 3px solid transparent;
-            text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
-        }
+    .title{ text-align:left; }
+    .title h1{font-size:2.4rem;margin:0 0 6px;letter-spacing:1px;line-height:1;display:flex;gap:12px;align-items:center}
 
-        .social-links {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin-top: 20px;
-        }
+    /* glitch effect */
+    .glitch{position:relative;display:inline-block}
+    .glitch::before,.glitch::after{content:attr(data-text);position:absolute;left:0;top:0;clip-path:rect(0,9999px,0,0)}
+    .glitch::before{animation:glitchTop 2.4s infinite linear;color:var(--neon1);opacity:0.85}
+    .glitch::after{animation:glitchBottom 3s infinite linear;color:var(--neon2);opacity:0.7}
+    @keyframes glitchTop{0%{clip-path:inset(0 0 85% 0)}10%{clip-path:inset(0 0 40% 0);transform:translate(-2px,-1px)}20%{clip-path:inset(0 0 85% 0);transform:none}30%{clip-path:inset(0 0 30% 0);transform:translate(2px,0)}40%{clip-path:inset(0 0 85% 0);transform:none}100%{clip-path:inset(0 0 85% 0)}}
+    @keyframes glitchBottom{0%{clip-path:inset(75% 0 0 0)}15%{clip-path:inset(45% 0 0 0);transform:translate(1px,1px)}25%{clip-path:inset(75% 0 0 0);transform:none}45%{clip-path:inset(25% 0 0 0);transform:translate(-2px,0)}100%{clip-path:inset(75% 0 0 0)}}
 
-        .social-links a {
-            color: var(--primary-text);
-            font-size: 2rem;
-            transition: transform 0.3s ease, color 0.3s ease, filter 0.3s ease;
-            padding: 5px;
-            filter: drop-shadow(0 0 3px rgba(255,255,255,0.4));
-        }
+    .subtitle{font-family:'JetBrains Mono';font-weight:600;opacity:0.9;color:rgba(255,255,255,0.85)}
 
-        .social-links a:hover {
-            transform: scale(1.25) translateY(-5px) rotate(-5deg);
-            color: var(--hover-color);
-            filter: drop-shadow(0 0 8px var(--glow-color));
-        }
+    .bio{margin-top:12px;font-size:0.98rem;opacity:0.9;color:rgba(255,255,255,0.85)}
 
-        .music-note {
-            margin-top: 30px;
-            font-size: 0.8rem;
-            color: rgba(255, 255, 255, 0.7);
-            font-style: italic;
-            text-shadow: 0 0 3px rgba(0,0,0,0.5);
-        }
+    .typing{margin-top:12px;font-weight:700;border-right:3px solid rgba(255,255,255,0.08);display:inline-block;padding-right:8px}
 
-        .tooltip-inner {
-            background-color: var(--hover-color);
-            color: black;
-            font-family: 'Mali', sans-serif;
-            font-weight: bold;
-            padding: 5px 10px;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-        }
-        .tooltip.bs-tooltip-top .tooltip-arrow::before { border-top-color: var(--hover-color); }
-        .tooltip.bs-tooltip-bottom .tooltip-arrow::before { border-bottom-color: var(--hover-color); }
-        .tooltip.bs-tooltip-start .tooltip-arrow::before { border-left-color: var(--hover-color); }
-        .tooltip.bs-tooltip-end .tooltip-arrow::before { border-right-color: var(--hover-color); }
+    /* social */
+    .socials{display:flex;gap:14px;margin-top:18px}
+    .socials a{display:inline-grid;place-items:center;width:46px;height:46px;border-radius:10px;background:linear-gradient(180deg,rgba(255,255,255,0.02), rgba(0,0,0,0.12));border:1px solid rgba(255,255,255,0.04);text-decoration:none;color:var(--text);font-size:1.2rem;box-shadow:0 6px 20px rgba(0,0,0,0.6);transition:transform .18s ease,box-shadow .18s}
+    .socials a:hover{transform:translateY(-6px) scale(1.06);box-shadow:0 12px 34px rgba(0,0,0,0.7);filter:drop-shadow(0 0 10px var(--neon1))}
 
-        /* --- Ribbon specific (top-left) --- */
-        .black-ribbon-top-left {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 80px;
-            opacity: 0.9;
-            z-index: 9999;
-            pointer-events: none;
-            user-select: none;
-        }
+    /* controls */
+    .controls{display:flex;gap:12px;align-items:center;margin-top:18px}
+    .btn{padding:10px 14px;border-radius:10px;border:0;background:linear-gradient(90deg,var(--neon1),var(--neon2));color:#07101a;font-weight:700;cursor:pointer;box-shadow:0 8px 28px rgba(0,0,0,0.6)}
+    .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--text)}
 
-        /* Responsive scaling for small screens */
-        @media (max-width: 480px) {
-            .black-ribbon-top-left { width: 60px; }
-            h1 { font-size: 1.8rem; }
-            .profile-container { width: 150px; height: 150px; }
-            .profile-img { width: 95px; height: 95px; }
-            .typing-effect { font-size: 0.9rem; min-height: 1.3em; }
-            .social-links { gap: 15px; }
-            .social-links a { font-size: 1.6rem; }
-            .main-container { padding: 25px 20px; }
-        }
-    </style>
+    /* bottom area */
+    .meta{display:flex;justify-content:space-between;align-items:center;margin-top:18px;gap:12px}
+    .meta .left{opacity:0.9}
+
+    /* floating scanline glow */
+    .glow-stripe{position:absolute;left:-30%;top:0;height:6px;width:160%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.06),transparent);transform:skewX(-18deg);mix-blend-mode:overlay;opacity:0.6}
+
+    /* responsive tweaks */
+    @media (max-width:920px){
+      :root{--max-card-width:760px}
+      .title h1{font-size:2.2rem}
+      .avatar-wrap{width:140px;height:140px;flex:0 0 140px}
+      .avatar{width:108px;height:108px}
+    }
+    @media (max-width:720px){
+      .top-row{flex-direction:column;align-items:center}
+      .profile{flex-direction:column;align-items:center;text-align:center}
+      .title{text-align:center}
+      .meta{flex-direction:column;align-items:center}
+      .avatar-wrap{width:120px;height:120px;flex:0 0 120px}
+      .avatar{width:96px;height:96px}
+      .controls{flex-direction:column;width:100%}
+      .controls .btn{width:100%}
+      .socials{justify-content:center}
+      .glitch::before,.glitch::after{display:none} /* reduce glitch on small screens */
+      body::after{background-size:100% 10px} /* reduce scanline density */
+    }
+
+    /* mobile performance mode (very small) */
+    @media (max-width:420px){
+      .card{padding:16px}
+      .title h1{font-size:1.4rem}
+      .bio{font-size:0.92rem}
+      .typing{font-size:0.92rem}
+    }
+
+  </style>
 </head>
-
 <body>
-    <!-- Black ribbon top-left (added) -->
-    <img src="https://raw.githubusercontent.com/appzstory/appzstory-ribbon/main/black_ribbon_top_left.png"
-         alt="Black ribbon" class="black-ribbon-top-left" aria-hidden="true">
+  <!-- animated colorful blob (visual only) -->
+  <svg id="bg-blob" viewBox="0 0 600 600" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <defs>
+      <linearGradient id="g1" x1="0" x2="1">
+        <stop offset="0%" stop-color="#002b4d"/>
+        <stop offset="50%" stop-color="#0e0b16"/>
+        <stop offset="100%" stop-color="#1a0429"/>
+      </linearGradient>
+    </defs>
+    <rect width="100%" height="100%" fill="url(#g1)" />
+  </svg>
 
-    <!-- Particles background -->
-    <div id="tsparticles"></div>
+  <div id="tsparticles" aria-hidden="true"></div>
 
-    <!-- Main Content Container -->
-    <div class="main-container" data-aos="fade-up" data-aos-duration="800">
-        <div class="content">
+  <section class="card" role="main" aria-label="Chamoy profile card">
+    <div class="neon-frame" aria-hidden="true"></div>
+    <div class="glow-stripe" aria-hidden="true"></div>
 
-            <!-- Profile Picture with Frame Container -->
-            <div class="profile-container" data-aos="zoom-in" data-aos-delay="200">
-                <img class="profile-img" src="https://img5.pic.in.th/file/secure-sv1/32256612_1417499371729311_2435113128162230272_n.jpg" alt="Profile">
-                <img class="profile-frame" src="" alt="Profile Frame">
-            </div>
-
-            <!-- Title -->
-            <h1 class="ml11">
-              <span class="text-wrapper">
-                <span class="line line1"></span>
-                <span class="letters">ChamoyBio</span>
-              </span>
-            </h1>
-
-            <!-- Typing Effect Paragraph -->
-            <p class="typing-effect" id="typing" data-aos="fade-up" data-aos-delay="600"></p>
-
-            <!-- Social Media Links -->
-            <div class="social-links" data-aos="fade-up" data-aos-delay="700">
-                <a href="https://github.com/chamoys" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" title="GitHub" data-aos="fade-up" data-aos-delay="800"><i class="bi bi-github"></i></a>
-                <a href="https://www.facebook.com/nc.cmz" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" title="Facebook" data-aos="fade-up" data-aos-delay="900"><i class="bi bi-facebook"></i></a>
-                <a href="https://discord.gg/23rDQTy9NN" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" title="Discord Server" data-aos="fade-up" data-aos-delay="1000"><i class="bi bi-discord"></i></a>
-                <a href="https://www.tiktok.com/@nc.cmz___" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" title="TikTok" data-aos="fade-up" data-aos-delay="1100"><i class="bi bi-tiktok"></i></a>
-                <a href="https://ezdn.app/ChamoyZ" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" title="Donate" data-aos="fade-up" data-aos-delay="1200"><i class="bi bi-piggy-bank-fill"></i></a>
-            </div>
-
-            <!-- Music Note -->
-             <p class="music-note" data-aos="fade-up" data-aos-delay="1300">คลิกที่หน้าจอเพื่อเล่นเพลงประกอบ 🎵</p>
+    <div class="top-row">
+      <div class="profile">
+        <div class="avatar-wrap" data-aos="zoom-in">
+          <img class="avatar" src="https://img5.pic.in.th/file/secure-sv1/32256612_1417499371729311_2435113128162230272_n.jpg" alt="Chamoy" loading="lazy">
+          <div class="avatar-border" aria-hidden="true">
+            <!-- circular animated SVG border -->
+            <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
+              <defs>
+                <linearGradient id="nb" x1="0" x2="1">
+                  <stop offset="0%" stop-color="#00e5ff"/>
+                  <stop offset="100%" stop-color="#ff3d81"/>
+                </linearGradient>
+              </defs>
+              <circle cx="50" cy="50" r="45" stroke="url(#nb)" stroke-width="3" fill="none" stroke-linecap="round" stroke-dasharray="10 6">
+                <animateTransform attributeName="transform" type="rotate" from="0 50 50" to="360 50 50" dur="18s" repeatCount="indefinite" />
+              </circle>
+            </svg>
+          </div>
         </div>
+
+        <div class="title">
+          <h1><span class="glitch" data-text="ChamoyBio">ChamoyBio</span> <span style="font-size:0.8rem;color:rgba(255,255,255,0.6);">⚡ CYBER</span></h1>
+          <div class="subtitle">โปรไฟล์เกมมิ่ง · dev · เกรียนอย่างมีสไตล์</div>
+          <div class="bio">สาย Neon + Glitch — เก็บลิงก์ที่สำคัญไว้ที่เดียว แชร์ได้ทันที</div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:10px">
+        <div style="display:flex;gap:8px;align-items:center">
+          <button id="audioToggle" class="btn" aria-pressed="false" title="เล่น/หยุดเพลง"><i class="bi bi-play-fill"></i> เล่นเพลง</button>
+          <a class="btn ghost" href="https://ezdn.app/ChamoyZ" target="_blank" rel="noopener" title="Donate">Donate</a>
+        </div>
+        <div style="opacity:0.9;color:rgba(255,255,255,0.8);font-family:'JetBrains Mono';font-size:0.9rem">Online · <strong>Now</strong></div>
+      </div>
     </div>
 
-    <!-- Scripts -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.12.0/tsparticles.bundle.min.js"></script>
+    <div class="typing" id="typing" aria-live="polite"></div>
 
-    <script>
-        $(document).ready(function() {
+    <div class="socials" aria-label="social links">
+      <a href="https://github.com/chamoys" target="_blank" rel="noopener" title="GitHub"><i class="bi bi-github"></i></a>
+      <a href="https://www.facebook.com/nc.cmz" target="_blank" rel="noopener" title="Facebook"><i class="bi bi-facebook"></i></a>
+      <a href="https://discord.gg/23rDQTy9NN" target="_blank" rel="noopener" title="Discord"><i class="bi bi-discord"></i></a>
+      <a href="https://www.tiktok.com/@nc.cmz___" target="_blank" rel="noopener" title="TikTok"><i class="bi bi-tiktok"></i></a>
+    </div>
 
-            // --- Random Profile Frame Logic ---
-            const frameUrls = [
-                "https://cdn.jsdelivr.net/gh/itspi3141/discord-fake-avatar-decorations@main/public/decorations/copium.png",
-                "https://cdn.jsdelivr.net/gh/itspi3141/discord-fake-avatar-decorations@main/public/decorations/trash.png",
-                "https://cdn.jsdelivr.net/gh/itspi3141/discord-fake-avatar-decorations@main/public/decorations/grass_toucher.png",
-                "https://cdn.jsdelivr.net/gh/itspi3141/discord-fake-avatar-decorations@main/public/decorations/press_f_black.png",
-                "https://cdn.jsdelivr.net/gh/itspi3141/discord-fake-avatar-decorations@main/public/decorations/press_f_white.png",
-                "https://cdn.jsdelivr.net/gh/itspi3141/discord-fake-avatar-decorations@main/public/decorations/git_gud.png",
-                "https://cdn.jsdelivr.net/gh/itspi3141/discord-fake-avatar-decorations@main/public/decorations/ggez.png",
-                "https://cdn.jsdelivr.net/gh/itspi3141/discord-fake-avatar-decorations@main/public/decorations/questionable.png",
-            ];
+    <div class="meta">
+      <div class="left">🎮 Favorite: Retro FPS · Music: Chillwave</div>
+      <div class="right" style="opacity:0.9;font-family:'JetBrains Mono'">#ChamoyZ</div>
+    </div>
+  </section>
 
-            const randomIndex = Math.floor(Math.random() * frameUrls.length);
-            const randomFrameUrl = frameUrls[randomIndex];
-            const frameElement = $('.profile-frame');
-            if (frameElement.length) {
-                frameElement.attr('src', randomFrameUrl);
-            }
+  <!-- Libraries -->
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.12.0/tsparticles.bundle.min.js"></script>
 
-            // Initialize AOS
-            AOS.init({ once: true, duration: 600, easing: 'ease-out-quad' });
+  <script>
+    // detect touch / small screens to reduce effects
+    const isTouch = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
+    const smallScreen = window.matchMedia('(max-width:720px)').matches;
 
-            // Initialize Bootstrap Tooltips
-            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) { return new bootstrap.Tooltip(tooltipTriggerEl) })
+    AOS.init({once:true,duration:700,easing:'ease-out-quad',disable: smallScreen});
 
-            // --- MP3 Audio Player Logic ---
-            var audio = new Audio("https://cdn.discordapp.com/attachments/990550156397146132/1171491474098110535/music.mp3");
-            audio.loop = true;
-            var played = false;
-            $(document).one("click pointerdown", function() {
-                if (!played) { audio.play().catch(e => {}); audio.volume = 0.15; played = true; }
-            });
+    // typing
+    const typingEl = document.getElementById('typing');
+    const phrases = ["Discord: nc._","Chamoy — Cyber Collector","ไม่มีใครดีเท่าแม่มึงแล้ว 🐻"];
+    let pi=0, ci=0, er=false;
+    function type(){
+      const text = phrases[pi];
+      if(!er){ typingEl.textContent = text.slice(0, ++ci); if(ci===text.length){ setTimeout(()=>{ er=true; setTimeout(type,150); },2000); return } setTimeout(type,80); }
+      else{ typingEl.textContent = text.slice(0, --ci); if(ci===0){ er=false; pi=(pi+1)%phrases.length; setTimeout(type,350); return } setTimeout(type,35); }
+    }
+    setTimeout(type,700);
 
-            // --- Typing Effect Logic ---
-            const phrases = ["Discord: nc._", "ไม่มีใครดีเท่าแม่มึงแล้ว 🐻", "ChamoyBio 💖"];
-            let phraseIndex = 0, charIndex = 0, isErasing = false, cursorInterval;
-            let typingElement = document.getElementById("typing");
-             function blinkCursor() { if (!cursorInterval) { cursorInterval = setInterval(() => { typingElement.style.borderRightColor = (!isErasing && typingElement.style.borderRightColor === 'transparent') ? 'var(--primary-text)' : (isErasing ? 'var(--primary-text)' : 'transparent'); }, 500); } }
-             function typeText() { isErasing = false; typingElement.style.borderRightColor = 'var(--primary-text)'; if (charIndex < phrases[phraseIndex].length) { typingElement.innerHTML += phrases[phraseIndex].charAt(charIndex++); setTimeout(typeText, 100); } else { setTimeout(eraseText, 2500); } }
-             function eraseText() { isErasing = true; if (charIndex > 0) { typingElement.innerHTML = phrases[phraseIndex].substring(0, --charIndex); setTimeout(eraseText, 60); } else { phraseIndex = (phraseIndex + 1) % phrases.length; isErasing = false; setTimeout(typeText, 500); } }
-            setTimeout(() => { typeText(); blinkCursor(); }, 1400);
+    // audio control
+    const audio = new Audio('https://cdn.discordapp.com/attachments/990550156397146132/1171491474098110535/music.mp3');
+    audio.loop = true; audio.volume = 0.14;
+    const audioBtn = document.getElementById('audioToggle');
+    audioBtn.addEventListener('click', async ()=>{
+      try{ if(audio.paused){ await audio.play(); audioBtn.innerHTML = '<i class="bi bi-pause-fill"></i> หยุดเพลง'; audioBtn.setAttribute('aria-pressed','true'); } else { audio.pause(); audioBtn.innerHTML = '<i class="bi bi-play-fill"></i> เล่นเพลง'; audioBtn.setAttribute('aria-pressed','false'); } }catch(e){ console.warn(e) }
+    });
+    audioBtn.addEventListener('keyup',(e)=>{ if(e.key==='Enter' || e.key===' ') audioBtn.click(); });
 
-            // --- Anime.js Title Animation ---
-            var textWrapper = document.querySelector('.ml11 .letters');
-             if(textWrapper) {
-                 textWrapper.innerHTML = textWrapper.textContent.replace(/([^\x00-\x80]|\w)/g, "<span class='letter'>$&</span>");
-                 document.querySelector('h1').style.opacity = 1;
-                 anime.timeline({ loop: false })
-                   .add({ targets: '.ml11 .line', scaleY: [0,1], opacity: [0.5,1], easing: "easeOutExpo", duration: 700 })
-                   .add({ targets: '.ml11 .line', translateX: [0, document.querySelector('.ml11 .letters').getBoundingClientRect().width + 10], easing: "easeOutExpo", duration: 700, delay: 100 })
-                   .add({ targets: '.ml11 .letter', opacity: [0,1], easing: "easeOutExpo", duration: 600, offset: '-=775', delay: (el, i) => 34 * (i+1) })
-                   .add({ targets: '.ml11 .line', opacity: 0, duration: 500, easing: "easeOutExpo", delay: 500 });
-             } else { var h1 = document.querySelector('h1'); if(h1) h1.style.opacity = 1; }
+    // tsParticles — adjust depending on device
+    const particleOptionsDesktop = {
+      fpsLimit:60,
+      interactivity:{events:{onHover:{enable:true,mode:'repulse'},onClick:{enable:true,mode:'push'},resize:true},modes:{repulse:{distance:120,duration:0.4},push:{quantity:6}}},
+      particles:{color:{value:['#00e5ff','#ff3d81','#8b5cf6']},links:{enable:false},move:{direction:'none',enable:true,outModes:{default:'bounce'},random:true,speed:1.1},number:{density:{enable:true,area:900},value:40},opacity:{value:{min:0.06,max:0.6}},shape:{type:'circle'},size:{value:{min:1,max:3}}},
+      detectRetina:true
+    };
+    const particleOptionsMobile = JSON.parse(JSON.stringify(particleOptionsDesktop));
+    particleOptionsMobile.particles.number.value = 14; particleOptionsMobile.interactivity.events.onHover.enable = false; particleOptionsMobile.particles.move.speed = 0.6;
 
-            // --- tsParticles Initialization ---
-            tsParticles.load("tsparticles", {
-                fpsLimit: 60, interactivity: { events: { onHover: { enable: true, mode: "repulse" }, onClick: { enable: true, mode: "push" }, resize: true }, modes: { repulse: { distance: 100, duration: 0.4 }, push: { quantity: 4 } } }, particles: { color: { value: ["#ffffff", "#f39c12", "#e0e0e0"] }, links: { color: "#ffffff", distance: 150, enable: true, opacity: 0.2, width: 1 }, collisions: { enable: false }, move: { direction: "none", enable: true, outModes: { default: "bounce" }, random: true, speed: 1.5, straight: false }, number: { density: { enable: true, area: 800 }, value: 60 }, opacity: { value: { min: 0.1, max: 0.6 }, anim: { enable: true, speed: 0.5, opacity_min: 0.1, sync: false } }, shape: { type: "circle" }, size: { value: { min: 1, max: 3 }, anim: { enable: true, speed: 2, size_min: 0.5, sync: false } } }, detectRetina: true
-            });
+    const particlesToLoad = (smallScreen || isTouch) ? particleOptionsMobile : particleOptionsDesktop;
+    tsParticles.load('tsparticles', particlesToLoad);
 
-        });
-    </script>
+    // subtle title shimmer using anime.js (disabled on reduced-motion / small)
+    (function(){
+      if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      const title = document.querySelector('.glitch');
+      if(!title) return;
+      if(smallScreen) return; // skip shimmer on small screens
+      anime({targets:title,opacity:[0.9,1],duration:1600,easing:'easeInOutSine',direction:'alternate',loop:true});
+    })();
+
+    // cursor neon follower — only on non-touch big screens for performance
+    (function(){
+      if(isTouch || smallScreen) return; // skip for mobile/touch devices
+      const follower = document.createElement('div');
+      follower.style.position='fixed'; follower.style.pointerEvents='none'; follower.style.width='14px'; follower.style.height='14px'; follower.style.borderRadius='50%'; follower.style.transform='translate(-50%,-50%)'; follower.style.boxShadow='0 0 14px rgba(0,229,255,0.8),0 0 30px rgba(255,61,129,0.18)'; follower.style.zIndex=99999; follower.style.mixBlendMode='screen';
+      document.body.appendChild(follower);
+      window.addEventListener('mousemove',e=>{follower.style.left=e.clientX+'px'; follower.style.top=e.clientY+'px'});
+    })();
+
+    // Accessibility: make social links bigger tappable on mobile
+    (function(){
+      if(window.matchMedia('(max-width:720px)').matches){
+        document.querySelectorAll('.socials a').forEach(a=>{ a.style.width='52px'; a.style.height='52px'; a.style.fontSize='1.3rem'; });
+      }
+    })();
+
+    // handle orientation changes & resize: recalc smallScreen and toggle heavy effects
+    window.addEventListener('resize', ()=>{
+      const nowSmall = window.matchMedia('(max-width:720px)').matches;
+      if(nowSmall !== smallScreen){ location.reload(); } // simple approach: reload so we re-init particles/AOS appropriately
+    });
+
+  </script>
 </body>
 </html>
