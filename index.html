@@ -1,282 +1,474 @@
-<!doctype html>
-<html lang="th">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>ChamoyBio ⚡️ — CYBER EDITION (Responsive)</title>
-  <meta name="description" content="ChamoyBio — หน้าโปรไฟล์ไซเบอร์เท่สุด ๆ สำหรับ GitHub Pages (ปรับแต่งให้ตอบสนองทั้ง PC & Mobile)" />
-  <meta name="theme-color" content="#0b0710" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChamoyZ Portfolio</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 
-  <!-- Open Graph -->
-  <meta property="og:title" content="ChamoyBio ⚡️" />
-  <meta property="og:description" content="หน้าโปรไฟล์ไซเบอร์เท่สุด ๆ — Neon, Glitch, Particles, และเพลง" />
-  <meta property="og:image" content="https://img5.pic.in.th/file/secure-sv1/32256612_1417499371729311_2435113128162230272_n.jpg" />
+    <!-- React & Babel for browser execution -->
+    <script type="importmap">
+        {
+            "imports": {
+                "react": "https://esm.sh/react@18.2.0",
+                "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
+                "lucide-react": "https://esm.sh/lucide-react@0.292.0"
+            }
+        }
+    </script>
+    <script type="module" src="https://esm.sh/run-css"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Mali:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Nunito', 'Kanit', sans-serif; }
+        
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background-color: #2f3136; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background-color: #202225; border-radius: 4px; }
+        
+        /* Glass Effect */
+        .glass-card {
+            background: #2f3136;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease;
+        }
+        .glass-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+            border-color: rgba(88, 101, 242, 0.4);
+        }
 
-  <!-- Bootstrap icons + AOS + anime.js + tsParticles -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+        /* Equalizer Animation */
+        @keyframes equalizer {
+            0% { height: 20%; }
+            50% { height: 100%; }
+            100% { height: 20%; }
+        }
+        .bar {
+            width: 4px;
+            background: white;
+            animation: equalizer 1s infinite ease-in-out;
+        }
+        .bar:nth-child(1) { animation-delay: 0.0s; }
+        .bar:nth-child(2) { animation-delay: 0.2s; }
+        .bar:nth-child(3) { animation-delay: 0.4s; }
+        .bar:nth-child(4) { animation-delay: 0.1s; }
+        
+        .paused .bar { animation-play-state: paused; height: 20%; transition: height 0.3s; }
 
-  <style>
-    :root{
-      --bg:#040207;
-      --card: rgba(255,255,255,0.04);
-      --neon1: #00e5ff;
-      --neon2: #ff3d81;
-      --accent: #f39c12;
-      --glass-border: rgba(255,255,255,0.06);
-      --text: #e8f1ff;
-      --max-card-width: 920px;
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%;margin:0;font-family:'Mali', 'JetBrains Mono', system-ui, -apple-system, 'Segoe UI', Roboto, Arial}
-    body{background:radial-gradient(1200px 600px at 10% 10%, rgba(0,50,80,0.08), transparent), var(--bg);color:var(--text);display:flex;align-items:center;justify-content:center;padding:28px;overflow:auto}
+        /* Typewriter Cursor */
+        .typing-cursor::after {
+            content: '|';
+            animation: blink 1s step-end infinite;
+        }
+        @keyframes blink { 50% { opacity: 0; } }
 
-    /* Respect users who prefer reduced motion */
-    @media (prefers-reduced-motion: reduce) {
-      * { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
-    }
-
-    /* scanlines */
-    body::after{content:'';position:fixed;inset:0;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px);background-size:100% 6px;mix-blend-mode:overlay}
-
-    /* animated galaxy layer */
-    #bg-blob{position:fixed;inset:-20% -10% auto -10%;width:140%;height:140%;z-index:-4;filter:blur(80px);opacity:0.9;pointer-events:none}
-
-    /* particles */
-    #tsparticles{position:fixed;inset:0;z-index:-3}
-
-    /* main card */
-    .card{width:clamp(320px, 92%, var(--max-card-width));max-width:var(--max-card-width);border-radius:16px;padding:22px;border:1px solid var(--glass-border);background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));backdrop-filter: blur(8px);box-shadow: 0 20px 60px rgba(2,6,23,0.7);position:relative;overflow:hidden}
-
-    /* neon frame */
-    .neon-frame{position:absolute;inset:0;border-radius:16px;padding:2px;pointer-events:none;mix-blend-mode:screen}
-    .neon-frame:before{content:'';position:absolute;inset:2px;border-radius:14px;background:linear-gradient(90deg,var(--neon1),var(--neon2));filter:blur(28px);opacity:0.22}
-    .neon-frame:after{content:'';position:absolute;inset:12px;border-radius:10px;box-shadow:inset 0 0 40px rgba(0,0,0,0.6)}
-
-    .top-row{display:flex;gap:18px;align-items:center;justify-content:space-between}
-
-    .profile{display:flex;gap:18px;align-items:center}
-    .avatar-wrap{position:relative;width:160px;height:160px;flex:0 0 160px}
-    .avatar{width:120px;height:120px;border-radius:50%;object-fit:cover;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);box-shadow:0 10px 40px rgba(0,0,0,0.6);border:4px solid rgba(255,255,255,0.04)}
-    .avatar-border{position:absolute;inset:0;border-radius:50%;pointer-events:none}
-    .avatar-border svg{width:100%;height:100%}
-
-    .title{ text-align:left; }
-    .title h1{font-size:2.4rem;margin:0 0 6px;letter-spacing:1px;line-height:1;display:flex;gap:12px;align-items:center}
-
-    /* glitch effect */
-    .glitch{position:relative;display:inline-block}
-    .glitch::before,.glitch::after{content:attr(data-text);position:absolute;left:0;top:0;clip-path:rect(0,9999px,0,0)}
-    .glitch::before{animation:glitchTop 2.4s infinite linear;color:var(--neon1);opacity:0.85}
-    .glitch::after{animation:glitchBottom 3s infinite linear;color:var(--neon2);opacity:0.7}
-    @keyframes glitchTop{0%{clip-path:inset(0 0 85% 0)}10%{clip-path:inset(0 0 40% 0);transform:translate(-2px,-1px)}20%{clip-path:inset(0 0 85% 0);transform:none}30%{clip-path:inset(0 0 30% 0);transform:translate(2px,0)}40%{clip-path:inset(0 0 85% 0);transform:none}100%{clip-path:inset(0 0 85% 0)}}
-    @keyframes glitchBottom{0%{clip-path:inset(75% 0 0 0)}15%{clip-path:inset(45% 0 0 0);transform:translate(1px,1px)}25%{clip-path:inset(75% 0 0 0);transform:none}45%{clip-path:inset(25% 0 0 0);transform:translate(-2px,0)}100%{clip-path:inset(75% 0 0 0)}}
-
-    .subtitle{font-family:'JetBrains Mono';font-weight:600;opacity:0.9;color:rgba(255,255,255,0.85)}
-
-    .bio{margin-top:12px;font-size:0.98rem;opacity:0.9;color:rgba(255,255,255,0.85)}
-
-    .typing{margin-top:12px;font-weight:700;border-right:3px solid rgba(255,255,255,0.08);display:inline-block;padding-right:8px}
-
-    /* social */
-    .socials{display:flex;gap:14px;margin-top:18px}
-    .socials a{display:inline-grid;place-items:center;width:46px;height:46px;border-radius:10px;background:linear-gradient(180deg,rgba(255,255,255,0.02), rgba(0,0,0,0.12));border:1px solid rgba(255,255,255,0.04);text-decoration:none;color:var(--text);font-size:1.2rem;box-shadow:0 6px 20px rgba(0,0,0,0.6);transition:transform .18s ease,box-shadow .18s}
-    .socials a:hover{transform:translateY(-6px) scale(1.06);box-shadow:0 12px 34px rgba(0,0,0,0.7);filter:drop-shadow(0 0 10px var(--neon1))}
-
-    /* controls */
-    .controls{display:flex;gap:12px;align-items:center;margin-top:18px}
-    .btn{padding:10px 14px;border-radius:10px;border:0;background:linear-gradient(90deg,var(--neon1),var(--neon2));color:#07101a;font-weight:700;cursor:pointer;box-shadow:0 8px 28px rgba(0,0,0,0.6)}
-    .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--text)}
-
-    /* bottom area */
-    .meta{display:flex;justify-content:space-between;align-items:center;margin-top:18px;gap:12px}
-    .meta .left{opacity:0.9}
-
-    /* floating scanline glow */
-    .glow-stripe{position:absolute;left:-30%;top:0;height:6px;width:160%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.06),transparent);transform:skewX(-18deg);mix-blend-mode:overlay;opacity:0.6}
-
-    /* responsive tweaks */
-    @media (max-width:920px){
-      :root{--max-card-width:760px}
-      .title h1{font-size:2.2rem}
-      .avatar-wrap{width:140px;height:140px;flex:0 0 140px}
-      .avatar{width:108px;height:108px}
-    }
-    @media (max-width:720px){
-      .top-row{flex-direction:column;align-items:center}
-      .profile{flex-direction:column;align-items:center;text-align:center}
-      .title{text-align:center}
-      .meta{flex-direction:column;align-items:center}
-      .avatar-wrap{width:120px;height:120px;flex:0 0 120px}
-      .avatar{width:96px;height:96px}
-      .controls{flex-direction:column;width:100%}
-      .controls .btn{width:100%}
-      .socials{justify-content:center}
-      .glitch::before,.glitch::after{display:none} /* reduce glitch on small screens */
-      body::after{background-size:100% 10px} /* reduce scanline density */
-    }
-
-    /* mobile performance mode (very small) */
-    @media (max-width:420px){
-      .card{padding:16px}
-      .title h1{font-size:1.4rem}
-      .bio{font-size:0.92rem}
-      .typing{font-size:0.92rem}
-    }
-
-  </style>
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+    </style>
 </head>
-<body>
-  <!-- animated colorful blob (visual only) -->
-  <svg id="bg-blob" viewBox="0 0 600 600" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-    <defs>
-      <linearGradient id="g1" x1="0" x2="1">
-        <stop offset="0%" stop-color="#002b4d"/>
-        <stop offset="50%" stop-color="#0e0b16"/>
-        <stop offset="100%" stop-color="#1a0429"/>
-      </linearGradient>
-    </defs>
-    <rect width="100%" height="100%" fill="url(#g1)" />
-  </svg>
+<body class="bg-[#36393f] text-[#dcddde]">
+    <div id="root"></div>
 
-  <div id="tsparticles" aria-hidden="true"></div>
+    <script type="text/babel" data-type="module">
+        import React, { useState, useEffect } from 'react';
+        import { createRoot } from 'react-dom/client';
+        import { 
+            User, Code, Heart, Music, MessageCircle, Github, Twitter, 
+            ExternalLink, Cpu, Palette, Sparkles, Gamepad2, Coffee, 
+            Terminal, Youtube, Facebook, Database, Server, Play, Pause, 
+            Copy, Check, Filter 
+        } from 'lucide-react';
 
-  <section class="card" role="main" aria-label="Chamoy profile card">
-    <div class="neon-frame" aria-hidden="true"></div>
-    <div class="glow-stripe" aria-hidden="true"></div>
+        const Portfolio = () => {
+            // 1. Time State
+            const [time, setTime] = useState(new Date());
 
-    <div class="top-row">
-      <div class="profile">
-        <div class="avatar-wrap" data-aos="zoom-in">
-          <img class="avatar" src="https://img5.pic.in.th/file/secure-sv1/32256612_1417499371729311_2435113128162230272_n.jpg" alt="Chamoy" loading="lazy">
-          <div class="avatar-border" aria-hidden="true">
-            <!-- circular animated SVG border -->
-            <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
-              <defs>
-                <linearGradient id="nb" x1="0" x2="1">
-                  <stop offset="0%" stop-color="#00e5ff"/>
-                  <stop offset="100%" stop-color="#ff3d81"/>
-                </linearGradient>
-              </defs>
-              <circle cx="50" cy="50" r="45" stroke="url(#nb)" stroke-width="3" fill="none" stroke-linecap="round" stroke-dasharray="10 6">
-                <animateTransform attributeName="transform" type="rotate" from="0 50 50" to="360 50 50" dur="18s" repeatCount="indefinite" />
-              </circle>
-            </svg>
-          </div>
-        </div>
+            // 2. Music Player State
+            const [isPlaying, setIsPlaying] = useState(false);
+            const [musicProgress, setMusicProgress] = useState(30);
 
-        <div class="title">
-          <h1><span class="glitch" data-text="ChamoyBio">ChamoyBio</span> <span style="font-size:0.8rem;color:rgba(255,255,255,0.6);">⚡ CYBER</span></h1>
-          <div class="subtitle">โปรไฟล์เกมมิ่ง · dev · เกรียนอย่างมีสไตล์</div>
-          <div class="bio">สาย Neon + Glitch — เก็บลิงก์ที่สำคัญไว้ที่เดียว แชร์ได้ทันที</div>
-        </div>
-      </div>
+            // 3. Filter State
+            const [filter, setFilter] = useState('All');
 
-      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:10px">
-        <div style="display:flex;gap:8px;align-items:center">
-          <button id="audioToggle" class="btn" aria-pressed="false" title="เล่น/หยุดเพลง"><i class="bi bi-play-fill"></i> เล่นเพลง</button>
-          <a class="btn ghost" href="https://ezdn.app/ChamoyZ" target="_blank" rel="noopener" title="Donate">Donate</a>
-        </div>
-        <div style="opacity:0.9;color:rgba(255,255,255,0.8);font-family:'JetBrains Mono';font-size:0.9rem">Online · <strong>Now</strong></div>
-      </div>
-    </div>
+            // 4. Copy ID State
+            const [copied, setCopied] = useState(false);
 
-    <div class="typing" id="typing" aria-live="polite"></div>
+            useEffect(() => {
+                const timer = setInterval(() => setTime(new Date()), 1000);
+                return () => clearInterval(timer);
+            }, []);
 
-    <div class="socials" aria-label="social links">
-      <a href="https://github.com/chamoys" target="_blank" rel="noopener" title="GitHub"><i class="bi bi-github"></i></a>
-      <a href="https://www.facebook.com/nc.cmz" target="_blank" rel="noopener" title="Facebook"><i class="bi bi-facebook"></i></a>
-      <a href="https://discord.gg/23rDQTy9NN" target="_blank" rel="noopener" title="Discord"><i class="bi bi-discord"></i></a>
-      <a href="https://www.tiktok.com/@nc.cmz___" target="_blank" rel="noopener" title="TikTok"><i class="bi bi-tiktok"></i></a>
-    </div>
+            // Music Progress Animation
+            useEffect(() => {
+                let interval;
+                if (isPlaying) {
+                interval = setInterval(() => {
+                    setMusicProgress((prev) => (prev >= 100 ? 0 : prev + 1));
+                }, 1000);
+                }
+                return () => clearInterval(interval);
+            }, [isPlaying]);
 
-    <div class="meta">
-      <div class="left">🎮 Favorite: Retro FPS · Music: Chillwave</div>
-      <div class="right" style="opacity:0.9;font-family:'JetBrains Mono'">#ChamoyZ</div>
-    </div>
-  </section>
+            const handleCopy = () => {
+                navigator.clipboard.writeText("ChamoyZ#0000"); // Replace with actual ID
+                setCopied(true);
+                setTimeout(() => setCopied(false), 2000);
+            };
 
-  <!-- Libraries -->
-  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.12.0/tsparticles.bundle.min.js"></script>
+            const profile = {
+                name: "ChamoyZ",
+                realName: "Chedsada Pongam",
+                nickname: "Nut",
+                aliases: "aka Nut / Ramyong / Dev.Rebirth",
+                tag: "#Dev",
+                status: "Playing CS2 & Valorant 🎮",
+                bio: "Full-Stack Developer | Game Modder | Digital Creator. Coding client/server systems.",
+                birthday: "27 / 07 / 20XX",
+                role: "Full-Stack & Game Modder",
+                level: 50,
+                exp: "92%",
+                avatar: "https://github.com/ChamoyZ.png",
+                githubUrl: "https://github.com/ChamoyZ",
+                banner: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80",
+                aboutImage: "https://media.giphy.com/media/26tn33ai01UfGWeso/giphy.gif"
+            };
 
-  <script>
-    // detect touch / small screens to reduce effects
-    const isTouch = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
-    const smallScreen = window.matchMedia('(max-width:720px)').matches;
+            const skills = [
+                { name: "JavaScript", color: "bg-yellow-400" },
+                { name: "Python", color: "bg-blue-500" },
+                { name: "Pawn (SA-MP)", color: "bg-orange-400" },
+                { name: "MySQL", color: "bg-blue-600" },
+                { name: "Linux", color: "bg-gray-800" },
+                { name: "Git", color: "bg-red-500" }
+            ];
 
-    AOS.init({once:true,duration:700,easing:'ease-out-quad',disable: smallScreen});
+            const allProjects = [
+                {
+                title: "[SAMP] Scottish City",
+                role: "Owner & Developer",
+                desc: "Full server development and management.",
+                tags: ["Pawn", "MySQL"],
+                category: "SAMP",
+                color: "from-blue-600 to-indigo-600"
+                },
+                {
+                title: "[Roblox] Lunar City",
+                role: "Owner & Developer",
+                desc: "Game creation and scripting.",
+                tags: ["Lua", "Roblox Studio"],
+                category: "Roblox",
+                color: "from-purple-500 to-pink-500"
+                },
+                {
+                title: "[SAMP] Someday Mobile",
+                role: "Staff / Contributor",
+                desc: "Mobile compatibility and features.",
+                tags: ["Mobile", "Optimization"],
+                category: "SAMP",
+                color: "from-green-500 to-emerald-500"
+                },
+                {
+                title: "[SAMP] Nolimit City",
+                role: "Client Developer",
+                desc: "Custom client-side systems.",
+                tags: ["Client", "Modding"],
+                category: "SAMP",
+                color: "from-red-500 to-orange-500"
+                }
+            ];
 
-    // typing
-    const typingEl = document.getElementById('typing');
-    const phrases = ["Discord: nc._","Chamoy — Cyber Collector","ไม่มีใครดีเท่าแม่มึงแล้ว 🐻"];
-    let pi=0, ci=0, er=false;
-    function type(){
-      const text = phrases[pi];
-      if(!er){ typingEl.textContent = text.slice(0, ++ci); if(ci===text.length){ setTimeout(()=>{ er=true; setTimeout(type,150); },2000); return } setTimeout(type,80); }
-      else{ typingEl.textContent = text.slice(0, --ci); if(ci===0){ er=false; pi=(pi+1)%phrases.length; setTimeout(type,350); return } setTimeout(type,35); }
-    }
-    setTimeout(type,700);
+            const filteredProjects = filter === 'All' 
+                ? allProjects 
+                : allProjects.filter(p => p.category === filter);
 
-    // audio control
-    const audio = new Audio('https://cdn.discordapp.com/attachments/990550156397146132/1171491474098110535/music.mp3');
-    audio.loop = true; audio.volume = 0.14;
-    const audioBtn = document.getElementById('audioToggle');
-    audioBtn.addEventListener('click', async ()=>{
-      try{ if(audio.paused){ await audio.play(); audioBtn.innerHTML = '<i class="bi bi-pause-fill"></i> หยุดเพลง'; audioBtn.setAttribute('aria-pressed','true'); } else { audio.pause(); audioBtn.innerHTML = '<i class="bi bi-play-fill"></i> เล่นเพลง'; audioBtn.setAttribute('aria-pressed','false'); } }catch(e){ console.warn(e) }
-    });
-    audioBtn.addEventListener('keyup',(e)=>{ if(e.key==='Enter' || e.key===' ') audioBtn.click(); });
+            const categories = ['All', 'SAMP', 'Roblox'];
 
-    // tsParticles — adjust depending on device
-    const particleOptionsDesktop = {
-      fpsLimit:60,
-      interactivity:{events:{onHover:{enable:true,mode:'repulse'},onClick:{enable:true,mode:'push'},resize:true},modes:{repulse:{distance:120,duration:0.4},push:{quantity:6}}},
-      particles:{color:{value:['#00e5ff','#ff3d81','#8b5cf6']},links:{enable:false},move:{direction:'none',enable:true,outModes:{default:'bounce'},random:true,speed:1.1},number:{density:{enable:true,area:900},value:40},opacity:{value:{min:0.06,max:0.6}},shape:{type:'circle'},size:{value:{min:1,max:3}}},
-      detectRetina:true
-    };
-    const particleOptionsMobile = JSON.parse(JSON.stringify(particleOptionsDesktop));
-    particleOptionsMobile.particles.number.value = 14; particleOptionsMobile.interactivity.events.onHover.enable = false; particleOptionsMobile.particles.move.speed = 0.6;
+            return (
+                <div className="min-h-screen bg-[#36393f] text-[#dcddde] font-sans selection:bg-[#ffb6c1] selection:text-[#2f3136] p-4 md:p-8 relative overflow-hidden">
+                {/* Background Decor */}
+                <div className="absolute top-0 left-0 w-full h-full pointer-events-none opacity-50">
+                    <div className="absolute top-10 left-10 text-[#5865F2] opacity-20 animate-pulse"><Sparkles size={48} /></div>
+                    <div className="absolute bottom-20 right-20 text-[#ffb6c1] opacity-20 animate-bounce"><Heart size={32} /></div>
+                    <div className="absolute top-1/2 right-10 text-[#98ff98] opacity-20"><Code size={64} /></div>
+                </div>
 
-    const particlesToLoad = (smallScreen || isTouch) ? particleOptionsMobile : particleOptionsDesktop;
-    tsParticles.load('tsparticles', particlesToLoad);
+                <div className="max-w-7xl mx-auto">
+                    {/* Header Section */}
+                    <header className="flex justify-between items-center mb-8 bg-[#202225] p-4 rounded-2xl border-b-4 border-[#5865F2]">
+                    <div className="flex items-center gap-3">
+                        <Terminal className="text-[#5865F2]" size={32} />
+                        <div>
+                        <h1 className="text-2xl font-bold text-white tracking-wider">CHAMOIS<span className="text-[#5865F2]">.Z</span> 👾</h1>
+                        <p className="text-xs text-[#b9bbbe] font-mono">{profile.aliases}</p>
+                        </div>
+                    </div>
+                    <div className="hidden md:flex items-center gap-4 text-sm font-semibold text-[#b9bbbe]">
+                        <span>{time.toLocaleTimeString('th-TH')}</span>
+                        <div className="h-4 w-[1px] bg-gray-600"></div>
+                        <span className="flex items-center gap-2 text-[#43b581]"><div className="w-3 h-3 rounded-full bg-[#43b581] animate-pulse"></div> Online</span>
+                    </div>
+                    </header>
 
-    // subtle title shimmer using anime.js (disabled on reduced-motion / small)
-    (function(){
-      if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-      const title = document.querySelector('.glitch');
-      if(!title) return;
-      if(smallScreen) return; // skip shimmer on small screens
-      anime({targets:title,opacity:[0.9,1],duration:1600,easing:'easeInOutSine',direction:'alternate',loop:true});
-    })();
+                    {/* Bento Grid Layout */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 auto-rows-[minmax(100px,auto)]">
+                    
+                    {/* 1. Profile Card */}
+                    <div className="glass-card col-span-1 md:col-span-2 row-span-2 p-0 flex flex-col justify-between relative overflow-hidden group">
+                        <div className="absolute top-0 left-0 w-full h-32 overflow-hidden z-0">
+                        {profile.banner ? (
+                            <>
+                            <img src={profile.banner} alt="Banner" className="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity duration-500" />
+                            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#2f3136]"></div>
+                            </>
+                        ) : (
+                            <div className="w-full h-full bg-gradient-to-r from-[#5865F2] to-[#ffb6c1] opacity-80"></div>
+                        )}
+                        </div>
+                        
+                        <div className="relative z-10 mt-12 px-6 flex flex-col md:flex-row items-start md:items-end gap-4">
+                        <div className="relative">
+                            <div className="w-32 h-32 rounded-full border-4 border-[#2f3136] bg-gray-700 overflow-hidden relative shadow-xl">
+                            <img src={profile.avatar} alt="Profile" className="w-full h-full object-cover" />
+                            </div>
+                            <div className="absolute bottom-1 right-1 w-8 h-8 bg-[#43b581] rounded-full border-4 border-[#2f3136] flex items-center justify-center" title="Online">
+                            <div className="w-full h-full rounded-full animate-ping opacity-20 bg-white absolute"></div>
+                            </div>
+                        </div>
+                        <div className="mb-2">
+                            <div className="flex items-center gap-2">
+                            <h2 className="text-3xl font-bold text-white flex items-center gap-2 cursor-pointer hover:underline decoration-[#5865F2] drop-shadow-md" onClick={handleCopy}>
+                                {profile.name}
+                            </h2>
+                            <span className={`text-xs px-2 py-0.5 rounded cursor-pointer transition-all shadow-lg ${copied ? 'bg-green-500 text-white' : 'bg-[#202225]/80 backdrop-blur-md text-[#b9bbbe] hover:bg-[#40444b]'}`} onClick={handleCopy}>
+                                {copied ? <span className="flex items-center gap-1"><Check size={10}/> Copied!</span> : <span className="flex items-center gap-1"><Copy size={10}/> ID</span>}
+                            </span>
+                            </div>
+                            <div className="flex flex-wrap gap-2 mt-2">
+                            <span className="px-3 py-1 rounded-full bg-[#202225]/80 backdrop-blur-md text-xs font-bold text-[#5865F2] border border-[#5865F2] flex items-center gap-1 shadow-sm"><Code size={12}/> DEVELOPER</span>
+                            <span className="px-3 py-1 rounded-full bg-[#202225]/80 backdrop-blur-md text-xs font-bold text-[#ffb6c1] border border-[#ffb6c1] flex items-center gap-1 shadow-sm"><Gamepad2 size={12}/> MODDER</span>
+                            </div>
+                        </div>
+                        </div>
 
-    // cursor neon follower — only on non-touch big screens for performance
-    (function(){
-      if(isTouch || smallScreen) return; // skip for mobile/touch devices
-      const follower = document.createElement('div');
-      follower.style.position='fixed'; follower.style.pointerEvents='none'; follower.style.width='14px'; follower.style.height='14px'; follower.style.borderRadius='50%'; follower.style.transform='translate(-50%,-50%)'; follower.style.boxShadow='0 0 14px rgba(0,229,255,0.8),0 0 30px rgba(255,61,129,0.18)'; follower.style.zIndex=99999; follower.style.mixBlendMode='screen';
-      document.body.appendChild(follower);
-      window.addEventListener('mousemove',e=>{follower.style.left=e.clientX+'px'; follower.style.top=e.clientY+'px'});
-    })();
+                        <div className="mt-6 mx-6 mb-6 bg-[#202225] p-4 rounded-xl border-l-4 border-[#faa61a]">
+                        <h3 className="text-[#b9bbbe] text-xs uppercase font-bold mb-2">Who Am I?</h3>
+                        <div className="text-sm space-y-1 text-white relative z-10">
+                            <p>👤 <span className="text-[#b9bbbe]">Name:</span> {profile.realName}</p>
+                            <p>💬 <span className="text-[#b9bbbe]">Nickname:</span> {profile.nickname}</p>
+                            <p>🎂 <span className="text-[#b9bbbe]">Birthday:</span> {profile.birthday}</p>
+                            <p>🎮 <span className="text-[#b9bbbe]">Hobbies:</span> Coding client/server systems, CS2 & Valorant</p>
+                        </div>
+                        {profile.aboutImage && (
+                            <div className="mt-3 rounded-lg overflow-hidden border border-gray-700/50 shadow-inner">
+                            <img src={profile.aboutImage} alt="About Decoration" className="w-full h-32 object-cover opacity-80 hover:opacity-100 transition-opacity" />
+                            </div>
+                        )}
+                        </div>
 
-    // Accessibility: make social links bigger tappable on mobile
-    (function(){
-      if(window.matchMedia('(max-width:720px)').matches){
-        document.querySelectorAll('.socials a').forEach(a=>{ a.style.width='52px'; a.style.height='52px'; a.style.fontSize='1.3rem'; });
-      }
-    })();
+                        <div className="px-6 pb-4 pt-0 flex justify-between items-center text-xs font-mono text-[#b9bbbe]">
+                        <span>Role: {profile.role}</span>
+                        <a href={profile.githubUrl} target="_blank" rel="noreferrer" className="hover:text-white transition-colors">github.com/ChamoyZ</a>
+                        </div>
+                    </div>
 
-    // handle orientation changes & resize: recalc smallScreen and toggle heavy effects
-    window.addEventListener('resize', ()=>{
-      const nowSmall = window.matchMedia('(max-width:720px)').matches;
-      if(nowSmall !== smallScreen){ location.reload(); } // simple approach: reload so we re-init particles/AOS appropriately
-    });
+                    {/* 2. Status/Activity */}
+                    <div className="glass-card col-span-1 p-5 flex flex-col gap-3 justify-center items-center text-center bg-[#2f3136] hover:bg-[#292b2f]">
+                        <div className="w-16 h-16 rounded-2xl bg-[#43b581] flex items-center justify-center text-white mb-2 shadow-lg shadow-green-500/20 animate-bounce">
+                        <Gamepad2 size={32} />
+                        </div>
+                        <h3 className="font-bold text-white text-lg">Current Activity</h3>
+                        <p className="text-[#b9bbbe] text-sm italic typing-cursor">"{profile.status}"</p>
+                    </div>
 
-  </script>
+                    {/* 3. Social Links */}
+                    <div className="glass-card col-span-1 p-5 flex flex-col justify-center gap-3">
+                        <h3 className="text-xs uppercase font-bold text-[#b9bbbe] mb-2">Connect with Me</h3>
+                        <button className="flex items-center gap-3 w-full bg-[#202225] hover:bg-[#FF0000] p-3 rounded-lg transition-colors group">
+                        <Youtube size={20} className="text-white group-hover:text-white" />
+                        <span className="text-sm font-semibold text-[#b9bbbe] group-hover:text-white">YouTube</span>
+                        </button>
+                        <button className="flex items-center gap-3 w-full bg-[#202225] hover:bg-[#5865F2] p-3 rounded-lg transition-colors group">
+                        <MessageCircle size={20} className="text-white group-hover:text-white" />
+                        <span className="text-sm font-semibold text-[#b9bbbe] group-hover:text-white">Discord</span>
+                        </button>
+                        <button className="flex items-center gap-3 w-full bg-[#202225] hover:bg-[#1877F2] p-3 rounded-lg transition-colors group">
+                        <Facebook size={20} className="text-white group-hover:text-white" />
+                        <span className="text-sm font-semibold text-[#b9bbbe] group-hover:text-white">Facebook</span>
+                        </button>
+                    </div>
+
+                    {/* 4. Tech Stack */}
+                    <div className="glass-card col-span-1 md:col-span-2 p-6 flex flex-col justify-center">
+                        <div className="flex items-center gap-2 mb-4">
+                        <Cpu className="text-[#ffb6c1]" />
+                        <h3 className="text-xl font-bold text-white">Tech Stack & Tools</h3>
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                        {skills.map((skill, i) => (
+                            <div key={i} className="group relative">
+                            <div className={`px-4 py-2 rounded-md bg-[#202225] hover:${skill.color} transition-colors cursor-default border border-gray-700 flex items-center gap-2`}>
+                                <div className={`w-2 h-2 rounded-full ${skill.color}`}></div>
+                                <span className="text-sm font-semibold group-hover:text-white transition-colors">{skill.name}</span>
+                            </div>
+                            </div>
+                        ))}
+                        </div>
+                        <div className="flex gap-4 mt-4 text-[#72767d] justify-center md:justify-start">
+                        <Database size={20} />
+                        <Terminal size={20} />
+                        <Server size={20} />
+                        </div>
+                    </div>
+
+                    {/* 5. Music Player */}
+                    <div className="glass-card col-span-1 p-4 flex flex-col gap-3 relative overflow-hidden bg-gradient-to-br from-[#1db954] to-[#191414]">
+                        <div className="absolute top-2 right-2 opacity-50"><Music size={16} color="white"/></div>
+                        <div className="flex gap-3 items-center z-10">
+                        <button 
+                            onClick={() => setIsPlaying(!isPlaying)}
+                            className="w-14 h-14 bg-black/30 hover:bg-black/50 transition-colors rounded-lg flex items-center justify-center cursor-pointer group"
+                        >
+                            {isPlaying ? <Pause size={24} className="text-white"/> : <Play size={24} className="text-white ml-1"/>}
+                        </button>
+                        <div className="flex-1 min-w-0">
+                            <h4 className="text-white font-bold truncate text-sm">Coding Session</h4>
+                            <div className={`flex items-end gap-1 h-3 mt-1 ${isPlaying ? '' : 'paused'}`}>
+                                <div className="bar h-full bg-[#1db954]"></div>
+                                <div className="bar h-full bg-[#1db954]"></div>
+                                <div className="bar h-full bg-[#1db954]"></div>
+                                <div className="bar h-full bg-[#1db954]"></div>
+                            </div>
+                        </div>
+                        </div>
+                        <div className="w-full bg-black/20 h-1.5 rounded-full mt-2 overflow-hidden cursor-pointer">
+                            <div 
+                            className="h-full bg-white rounded-full relative transition-all duration-1000 linear"
+                            style={{ width: `${musicProgress}%` }}
+                            >
+                            </div>
+                        </div>
+                        <div className="flex justify-between text-[10px] text-white/80 font-mono mt-1">
+                        <span>{Math.floor((musicProgress / 100) * 180 / 60)}:{((Math.floor((musicProgress / 100) * 180) % 60) + '').padStart(2, '0')}</span>
+                        <span>3:00</span>
+                        </div>
+                    </div>
+
+                    {/* 6. EXP / Stats */}
+                    <div className="glass-card col-span-1 p-6 flex flex-col justify-center items-center relative">
+                        <div className="absolute top-3 left-3 text-xs font-bold text-[#b9bbbe]">LEVEL</div>
+                        <div className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#ffb6c1] to-[#5865F2]">
+                        {profile.level}
+                        </div>
+                        <div className="w-full mt-3">
+                        <div className="flex justify-between text-xs mb-1 text-[#dcddde]">
+                            <span>EXP</span>
+                            <span>{profile.exp}</span>
+                        </div>
+                        <div className="w-full bg-[#202225] h-3 rounded-full overflow-hidden border border-gray-700">
+                            <div className="h-full bg-[#5865F2] w-[92%] rounded-full relative overflow-hidden">
+                                <div className="absolute top-0 left-0 w-full h-full bg-white/20 animate-pulse"></div>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+
+                    {/* 7. Featured Projects */}
+                    <div className="col-span-1 md:col-span-3 lg:col-span-4 mt-4">
+                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4 px-2">
+                        <div className="flex items-center gap-2">
+                            <Palette className="text-[#ffb6c1]" />
+                            <h3 className="text-xl font-bold text-white">Latest Projects</h3>
+                        </div>
+                        <div className="flex bg-[#202225] p-1 rounded-lg self-start">
+                            {categories.map(cat => (
+                            <button
+                                key={cat}
+                                onClick={() => setFilter(cat)}
+                                className={`px-4 py-1 rounded-md text-sm font-semibold transition-colors ${
+                                filter === cat 
+                                    ? 'bg-[#5865F2] text-white' 
+                                    : 'text-[#b9bbbe] hover:bg-[#2f3136] hover:text-white'
+                                }`}
+                            >
+                                {cat}
+                            </button>
+                            ))}
+                        </div>
+                        </div>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        {filteredProjects.map((project, i) => (
+                            <div key={i} className="bg-[#2f3136] rounded-xl overflow-hidden hover:transform hover:scale-[1.02] transition-all duration-300 shadow-lg border border-gray-800 group cursor-pointer flex flex-col h-full animate-fade-in">
+                                <div className={`h-24 bg-gradient-to-r ${project.color} relative p-4 flex items-end`}>
+                                <div className="absolute top-3 right-3 bg-black/20 backdrop-blur-sm p-1.5 rounded-full hover:bg-white/20 transition-colors">
+                                    <ExternalLink size={14} className="text-white" />
+                                </div>
+                                <span className="text-[10px] font-bold uppercase tracking-wider text-white bg-black/30 px-2 py-0.5 rounded backdrop-blur-md">
+                                    {project.role.split(" ")[0]}
+                                </span>
+                                </div>
+                                <div className="p-4 flex-1 flex flex-col">
+                                <h4 className="text-base font-bold text-white mb-1 group-hover:text-[#ffb6c1] transition-colors truncate">{project.title}</h4>
+                                <p className="text-xs text-[#b9bbbe] mb-3 flex-1">{project.desc}</p>
+                                <div className="flex flex-wrap gap-1 mt-auto">
+                                    {project.tags.map((tag, t) => (
+                                    <span key={t} className="text-[10px] font-mono bg-[#202225] text-[#dcddde] px-1.5 py-0.5 rounded border border-gray-700">
+                                        #{tag}
+                                    </span>
+                                    ))}
+                                </div>
+                                </div>
+                            </div>
+                        ))}
+                        </div>
+                    </div>
+
+                    {/* 8. Contact / Message */}
+                    <div className="glass-card col-span-1 md:col-span-3 lg:col-span-4 p-6 flex flex-col md:flex-row items-center justify-between gap-4 bg-gradient-to-r from-[#2f3136] to-[#202225]">
+                        <div className="flex items-center gap-4">
+                        <div className="p-3 bg-[#5865F2]/20 rounded-full text-[#5865F2]">
+                            <Github size={24} />
+                        </div>
+                        <div>
+                            <h3 className="text-white font-bold">More on GitHub</h3>
+                            <p className="text-[#b9bbbe] text-sm">Check out my source codes & contributions.</p>
+                        </div>
+                        </div>
+                        <a href={profile.githubUrl} target="_blank" rel="noopener noreferrer" className="discord-btn text-white px-8 py-3 rounded-full font-bold shadow-lg shadow-indigo-500/30 flex items-center gap-2 transform hover:scale-105 transition-transform w-full md:w-auto justify-center">
+                        <span>Visit GitHub</span>
+                        <Sparkles size={16} />
+                        </a>
+                    </div>
+
+                    </div>
+
+                    {/* Footer */}
+                    <footer className="mt-12 text-center text-[#72767d] text-xs pb-8">
+                    <p>© {new Date().getFullYear()} {profile.name}. All rights reserved.</p>
+                    <p className="mt-1">Designed with <Heart size={10} className="inline text-[#ffb6c1]" /> & Code</p>
+                    </footer>
+                </div>
+                </div>
+            );
+        };
+
+        const root = createRoot(document.getElementById('root'));
+        root.render(<Portfolio />);
+    </script>
 </body>
 </html>
