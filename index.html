@@ -1,1238 +1,474 @@
 <!DOCTYPE html>
-<html lang="th">
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Chedsada Pongam — Roblox Game Developer</title>
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Nunito:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Itim&display=swap" rel="stylesheet">
-<style>
-:root {
-  --bg:       #060608;
-  --surface:  #0c0c10;
-  --card:     #111118;
-  --border:   rgba(220,50,50,0.15);
-  --red:      #e02020;
-  --red2:     #ff4444;
-  --red-dim:  #7a1010;
-  --gold:     #c8a45a;
-  --gold2:    #e8c87a;
-  --text:     #ece6d8;
-  --muted:    #5a5248;
-  --soft:     rgba(236,230,216,0.6);
-}
-
-*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
-html { scroll-behavior: smooth; }
-
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'Nunito', sans-serif;
-  font-weight: 300;
-  overflow-x: hidden;
-  cursor: none;
-}
-
-/* ── CURSOR ── */
-#cur { position:fixed; width:10px; height:10px; background:var(--red2); border-radius:50%; pointer-events:none; z-index:9999; transition:transform .15s; mix-blend-mode:exclusion; }
-#cur-trail { position:fixed; width:36px; height:36px; border:1px solid var(--red); border-radius:50%; pointer-events:none; z-index:9998; transition:all .18s ease; opacity:.6; }
-body:hover #cur { opacity:1; }
-
-/* ── CANVAS ── */
-#bg-canvas { position:fixed; inset:0; z-index:0; opacity:.7; }
-
-/* ── GRAIN ── */
-body::before {
-  content:''; position:fixed; inset:0; z-index:1; pointer-events:none; opacity:.035;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-}
-
-/* ── VIGNETTE ── */
-body::after {
-  content:''; position:fixed; inset:0; z-index:1; pointer-events:none;
-  background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,.75) 100%);
-}
-
-section { position:relative; z-index:2; }
-
-/* ════════════════════════════
-   NAVBAR
-════════════════════════════ */
-nav {
-  position:fixed; top:0; left:0; right:0; z-index:100;
-  display:flex; align-items:center; justify-content:space-between;
-  padding: 1.6rem 4rem;
-  background: linear-gradient(to bottom, rgba(6,6,8,.9), transparent);
-  backdrop-filter: blur(0px);
-  transition: backdrop-filter .4s, background .4s;
-}
-nav.scrolled { backdrop-filter:blur(20px); background:rgba(6,6,8,.85); }
-
-.nav-logo {
-  font-family:'Baloo 2', cursive;
-  font-size:1.1rem; font-weight:700;
-  letter-spacing:.05em;
-  color:var(--text);
-}
-.nav-logo span { color:var(--red); }
-
-.nav-links { display:flex; gap:2.5rem; list-style:none; }
-.nav-links a {
-  font-family:'Itim', cursive; font-size:.65rem;
-  letter-spacing:.3em; text-transform:uppercase;
-  color:var(--muted); text-decoration:none;
-  transition:color .3s;
-}
-.nav-links a:hover { color:var(--gold); }
-
-/* ════════════════════════════
-   HERO
-════════════════════════════ */
-#hero {
-  min-height:100vh; display:flex; flex-direction:column;
-  justify-content:center; align-items:flex-start;
-  padding: 0 4rem 0 7rem;
-  overflow:hidden;
-}
-
-.hero-tag {
-  font-family:'Itim', cursive; font-size:.65rem;
-  letter-spacing:.5em; color:var(--red);
-  text-transform:uppercase; margin-bottom:2rem;
-  display:flex; align-items:center; gap:1rem;
-  opacity:0; animation: fadeLeft 1s .3s forwards;
-}
-.hero-tag::before {
-  content:''; width:40px; height:1px; background:var(--red);
-}
-
-.hero-name {
-  font-family:'Baloo 2', cursive;
-  font-size: clamp(3.5rem, 8vw, 7.5rem);
-  font-weight:900; line-height:.95;
-  letter-spacing:-.02em;
-  opacity:0; animation: fadeLeft 1s .55s forwards;
-}
-.hero-name .line1 { display:block; color:var(--text); }
-.hero-name .line2 {
-  display:block;
-  background: linear-gradient(100deg, var(--red) 0%, var(--red2) 40%, var(--gold) 100%);
-  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
-  background-clip:text;
-  filter: drop-shadow(0 0 30px rgba(224,32,32,.4));
-}
-
-.hero-role {
-  margin-top:1.8rem;
-  font-family:'Itim', cursive; font-size:.8rem;
-  letter-spacing:.25em; color:var(--gold);
-  text-transform:uppercase;
-  opacity:0; animation: fadeLeft 1s .8s forwards;
-}
-
-.hero-desc {
-  max-width:480px; margin-top:1.5rem;
-  font-size:1rem; line-height:1.9;
-  color:var(--soft); font-style:italic;
-  font-family:'Baloo 2', cursive; font-weight:400;
-  opacity:0; animation: fadeLeft 1s 1s forwards;
-}
-
-.hero-cta-row {
-  display:flex; gap:1.2rem; margin-top:2.5rem; flex-wrap:wrap;
-  opacity:0; animation: fadeLeft 1s 1.2s forwards;
-}
-
-.btn-primary {
-  padding:.9rem 2.5rem;
-  background: linear-gradient(135deg, var(--red), #a01010);
-  color:#fff; font-family:'Itim', cursive;
-  font-size:.65rem; letter-spacing:.3em; text-transform:uppercase;
-  text-decoration:none; border:none; cursor:none;
-  position:relative; overflow:hidden;
-  transition:transform .3s, box-shadow .3s;
-}
-.btn-primary::before {
-  content:''; position:absolute; inset:0;
-  background: linear-gradient(135deg, var(--red2), var(--red));
-  opacity:0; transition:opacity .3s;
-}
-.btn-primary:hover { transform:translateY(-3px); box-shadow:0 15px 40px rgba(224,32,32,.4); }
-.btn-primary:hover::before { opacity:1; }
-.btn-primary span { position:relative; z-index:1; }
-
-.btn-outline {
-  padding:.9rem 2.5rem;
-  background:transparent; color:var(--text);
-  font-family:'Itim', cursive; font-size:.65rem;
-  letter-spacing:.3em; text-transform:uppercase;
-  text-decoration:none; border:1px solid rgba(236,230,216,.2);
-  cursor:none; transition:all .3s;
-}
-.btn-outline:hover { border-color:var(--gold); color:var(--gold); }
-
-/* hero deco */
-.hero-num {
-  position:absolute; right:4rem; bottom:10%;
-  font-family:'Baloo 2', cursive; font-size:18rem;
-  font-weight:900; line-height:1; color:rgba(224,32,32,.04);
-  pointer-events:none; user-select:none;
-  animation: floatY 8s ease-in-out infinite;
-}
-
-.scroll-line {
-  position:absolute; bottom:2.5rem; left:7rem;
-  display:flex; align-items:center; gap:1rem;
-  font-family:'Itim', cursive; font-size:.6rem;
-  letter-spacing:.4em; color:var(--muted); text-transform:uppercase;
-}
-.scroll-line::after {
-  content:''; width:60px; height:1px;
-  background:linear-gradient(90deg, var(--muted), transparent);
-}
-
-/* ════════════════════════════
-   ABOUT
-════════════════════════════ */
-#about {
-  padding:10rem 7rem;
-  display:grid; grid-template-columns:1fr 1fr; gap:6rem; align-items:center;
-}
-
-.about-left .overline {
-  font-family:'Itim', cursive; font-size:.65rem;
-  letter-spacing:.5em; color:var(--red); text-transform:uppercase;
-  display:flex; align-items:center; gap:1rem; margin-bottom:1.5rem;
-}
-.about-left .overline::before { content:''; width:30px; height:1px; background:var(--red); }
-
-.about-left h2 {
-  font-family:'Baloo 2', cursive; font-size:clamp(2rem,4vw,3.2rem);
-  font-weight:700; line-height:1.2; margin-bottom:1.5rem;
-  color:var(--text);
-}
-.about-left h2 em { color:var(--gold); font-style:normal; }
-
-.about-left p {
-  font-size:1rem; line-height:2;
-  color:var(--soft); margin-bottom:1rem;
-}
-
-.fun-facts {
-  margin-top:2rem; display:flex; flex-direction:column; gap:.75rem;
-}
-.fun-fact {
-  display:flex; align-items:center; gap:1rem;
-  font-family:'Itim', cursive; font-size:.7rem;
-  letter-spacing:.1em; color:var(--muted);
-}
-.fun-fact::before {
-  content:''; width:6px; height:6px; background:var(--red);
-  border-radius:50%; flex-shrink:0;
-  box-shadow:0 0 8px var(--red);
-}
-
-.about-right {
-  position:relative; display:flex;
-  align-items:center; justify-content:center;
-}
-
-.avatar-frame {
-  width:320px; height:320px; position:relative;
-}
-
-.avatar-bg {
-  width:100%; height:100%;
-  background: linear-gradient(135deg, #1a0505 0%, #200808 50%, #0c0810 100%);
-  border:1px solid var(--border);
-  display:flex; align-items:center; justify-content:center;
-  position:relative; overflow:hidden;
-  cursor:pointer;
-}
-.avatar-bg::before {
-  content:''; position:absolute; inset:0;
-  background: radial-gradient(circle at 30% 30%, rgba(224,32,32,.15), transparent 60%);
-  pointer-events:none;
-}
-.avatar-bg img {
-  width:100%; height:100%; object-fit:cover;
-  position:absolute; inset:0; z-index:2;
-}
-.avatar-upload-hint {
-  position:absolute; inset:0; z-index:3;
-  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.5rem;
-  background:rgba(0,0,0,.55); opacity:0;
-  transition:opacity .3s; pointer-events:none;
-}
-.avatar-bg:hover .avatar-upload-hint { opacity:1; }
-.avatar-upload-hint span {
-  font-family:'Itim', cursive; font-size:.7rem;
-  letter-spacing:.2em; color:#fff; text-transform:uppercase;
-}
-#avatar-input { display:none; }
-.avatar-initials {
-  font-family:'Baloo 2', cursive;
-  font-size:6rem; font-weight:900;
-  background: linear-gradient(135deg, var(--red2), var(--gold));
-  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
-  background-clip:text; position:relative; z-index:1;
-  filter: drop-shadow(0 0 20px rgba(224,32,32,.5));
-}
-
-.frame-corner {
-  position:absolute; width:20px; height:20px;
-  border-color:var(--gold); border-style:solid;
-}
-.fc-tl { top:-1px; left:-1px; border-width:1px 0 0 1px; }
-.fc-tr { top:-1px; right:-1px; border-width:1px 1px 0 0; }
-.fc-bl { bottom:-1px; left:-1px; border-width:0 0 1px 1px; }
-.fc-br { bottom:-1px; right:-1px; border-width:0 1px 1px 0; }
-
-.deco-line-v {
-  position:absolute; width:1px; height:200px;
-  background:linear-gradient(to bottom, transparent, var(--red-dim), transparent);
-  right:-3rem; top:50%; transform:translateY(-50%);
-}
-
-/* ════════════════════════════
-   SKILLS
-════════════════════════════ */
-#skills { padding:8rem 7rem; }
-
-.section-header { text-align:center; margin-bottom:4rem; }
-.section-header .overline {
-  font-family:'Itim', cursive; font-size:.65rem;
-  letter-spacing:.5em; color:var(--red); text-transform:uppercase;
-  margin-bottom:1rem; display:block;
-}
-.section-header h2 {
-  font-family:'Baloo 2', cursive; font-size:clamp(2rem,4vw,3rem);
-  font-weight:700; color:var(--text);
-}
-.section-header h2 em { color:var(--gold); font-style:italic; }
-
-.skills-grid {
-  display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:1px;
-  border:1px solid var(--border);
-}
-
-.skill-item {
-  background:var(--card); padding:2.5rem 2rem;
-  border-right:1px solid var(--border);
-  border-bottom:1px solid var(--border);
-  position:relative; overflow:hidden;
-  transition:all .4s ease;
-}
-.skill-item::before {
-  content:''; position:absolute; top:0; left:0;
-  width:100%; height:2px;
-  background:linear-gradient(90deg, var(--red), var(--gold));
-  transform:scaleX(0); transform-origin:left;
-  transition:transform .4s ease;
-}
-.skill-item:hover::before { transform:scaleX(1); }
-.skill-item:hover { background:rgba(224,32,32,.05); }
-
-.skill-ico { font-size:1.6rem; margin-bottom:1.2rem; display:block; }
-.skill-name {
-  font-family:'Baloo 2', cursive; font-size:1.1rem;
-  font-weight:700; color:var(--text); margin-bottom:.5rem;
-}
-.skill-note {
-  font-family:'Itim', cursive; font-size:.65rem;
-  letter-spacing:.1em; color:var(--muted); margin-bottom:1.2rem;
-}
-.skill-bar { height:2px; background:rgba(255,255,255,.06); position:relative; }
-.skill-bar-fill {
-  height:100%;
-  background:linear-gradient(90deg, var(--red), var(--gold));
-  width:0; transition:width 1.2s ease;
-}
-
-/* ════════════════════════════
-   PORTFOLIO
-════════════════════════════ */
-#portfolio { padding:8rem 7rem; }
-
-.portfolio-grid {
-  display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem; margin-top:3rem;
-}
-
-.project-card {
-  background:var(--card); border:1px solid var(--border);
-  overflow:hidden; position:relative;
-  transition:transform .4s ease, border-color .4s ease;
-}
-.project-card:hover { transform:translateY(-8px); border-color:rgba(224,32,32,.4); }
-
-.project-thumb {
-  height:180px; position:relative;
-  display:flex; align-items:center; justify-content:center;
-  overflow:hidden;
-}
-.project-thumb .thumb-bg {
-  position:absolute; inset:0;
-  transition:transform .5s ease;
-}
-.project-card:hover .thumb-bg { transform:scale(1.05); }
-
-.project-icon {
-  font-size:3.5rem; position:relative; z-index:1;
-  filter:drop-shadow(0 4px 20px rgba(0,0,0,.8));
-  transition:transform .4s ease;
-}
-.project-card:hover .project-icon { transform:scale(1.1) rotate(-5deg); }
-
-.project-body { padding:1.5rem; }
-.project-tag {
-  font-family:'Itim', cursive; font-size:.58rem;
-  letter-spacing:.3em; color:var(--red); text-transform:uppercase;
-  margin-bottom:.5rem; display:block;
-}
-.project-title {
-  font-family:'Baloo 2', cursive; font-size:1.2rem;
-  font-weight:700; color:var(--text); margin-bottom:.5rem;
-}
-.project-desc {
-  font-size:.85rem; line-height:1.7; color:var(--muted);
-}
-.project-footer {
-  padding:.75rem 1.5rem 1.25rem;
-  border-top:1px solid var(--border);
-  display:flex; align-items:center; justify-content:space-between;
-}
-.project-stat {
-  font-family:'Itim', cursive; font-size:.6rem;
-  letter-spacing:.1em; color:var(--muted);
-}
-.project-stat strong { color:var(--gold); font-weight:400; }
-
-.project-link {
-  font-family:'Itim', cursive; font-size:.58rem;
-  letter-spacing:.2em; color:var(--red); text-decoration:none;
-  text-transform:uppercase; transition:color .3s;
-}
-.project-link:hover { color:var(--gold); }
-
-/* ════════════════════════════
-   STATS
-════════════════════════════ */
-#stats {
-  padding:6rem 7rem;
-  background: linear-gradient(135deg, rgba(224,32,32,.04) 0%, transparent 50%, rgba(200,164,90,.04) 100%);
-  border-top:1px solid var(--border); border-bottom:1px solid var(--border);
-}
-
-.stats-row {
-  display:grid; grid-template-columns:repeat(4,1fr);
-  divide-x: 1px solid var(--border);
-}
-.stat-box {
-  text-align:center; padding:2rem;
-  border-right:1px solid var(--border);
-  position:relative;
-}
-.stat-box:last-child { border-right:none; }
-
-.stat-val {
-  font-family:'Baloo 2', cursive;
-  font-size:clamp(2.8rem,5vw,4.5rem); font-weight:900; line-height:1;
-  background:linear-gradient(135deg, var(--red2), var(--gold));
-  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
-  background-clip:text; display:block;
-}
-.stat-unit {
-  font-family:'Baloo 2', cursive; font-size:2rem;
-  font-weight:900; vertical-align:super;
-  background:linear-gradient(135deg, var(--red2), var(--gold));
-  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
-  background-clip:text;
-}
-.stat-lbl {
-  font-family:'Itim', cursive; font-size:.6rem;
-  letter-spacing:.3em; color:var(--muted);
-  text-transform:uppercase; margin-top:.75rem; display:block;
-}
-
-/* ════════════════════════════
-   CURRENTLY
-════════════════════════════ */
-#current { padding:7rem 7rem; }
-
-.current-grid { display:grid; grid-template-columns:1fr 1fr; gap:3rem; margin-top:3rem; }
-
-.current-card {
-  background:var(--card); border:1px solid var(--border);
-  padding:2.5rem; position:relative; overflow:hidden;
-}
-.current-card::after {
-  content:''; position:absolute; top:0; right:0;
-  width:100px; height:100px;
-  background:radial-gradient(circle, rgba(224,32,32,.1) 0%, transparent 70%);
-}
-
-.current-badge {
-  display:inline-flex; align-items:center; gap:.5rem;
-  background:rgba(224,32,32,.1); border:1px solid rgba(224,32,32,.3);
-  padding:.3rem .8rem; margin-bottom:1.2rem;
-}
-.current-badge::before {
-  content:''; width:6px; height:6px;
-  background:var(--red2); border-radius:50%;
-  animation:blink 1.5s infinite;
-}
-.current-badge span {
-  font-family:'Itim', cursive; font-size:.58rem;
-  letter-spacing:.3em; color:var(--red2); text-transform:uppercase;
-}
-@keyframes blink { 0%,100%{opacity:1;} 50%{opacity:.2;} }
-
-.current-title {
-  font-family:'Baloo 2', cursive; font-size:1.3rem;
-  font-weight:700; color:var(--text); margin-bottom:.75rem;
-}
-.current-desc { font-size:.9rem; line-height:1.8; color:var(--muted); }
-
-.progress-bar {
-  margin-top:1.5rem; height:2px;
-  background:rgba(255,255,255,.06);
-}
-.progress-fill {
-  height:100%; width:0;
-  background:linear-gradient(90deg, var(--red), var(--gold));
-  transition:width 1.5s ease;
-}
-.progress-label {
-  display:flex; justify-content:space-between; margin-top:.5rem;
-  font-family:'Itim', cursive; font-size:.58rem;
-  letter-spacing:.1em; color:var(--muted);
-}
-.progress-label strong { color:var(--gold); font-weight:400; }
-
-/* ════════════════════════════
-   CONTACT
-════════════════════════════ */
-#contact { padding:8rem 7rem; text-align:center; }
-
-.contact-inner { max-width:640px; margin:0 auto; }
-
-.contact-inner h2 {
-  font-family:'Baloo 2', cursive; font-size:clamp(2.5rem,5vw,4rem);
-  font-weight:900; line-height:1.1; margin-bottom:1rem;
-}
-.contact-inner h2 .highlight {
-  background:linear-gradient(100deg, var(--red), var(--gold));
-  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
-  background-clip:text;
-}
-
-.contact-sub {
-  font-family:'Baloo 2', cursive; font-style:italic;
-  font-size:1.05rem; color:var(--soft); margin-bottom:3rem;
-}
-
-.social-grid {
-  display:flex; justify-content:center; flex-wrap:wrap; gap:1rem; margin-bottom:3rem;
-}
-
-.social-btn {
-  display:flex; align-items:center; gap:.75rem;
-  background:var(--card); border:1px solid var(--border);
-  padding:.9rem 1.8rem; text-decoration:none;
-  transition:all .3s ease; cursor:none;
-}
-.social-btn:hover { border-color:var(--red); background:rgba(224,32,32,.08); }
-.social-btn:hover .social-icon { transform:scale(1.2); }
-
-.social-icon { font-size:1.2rem; transition:transform .3s; }
-.social-label {
-  font-family:'Itim', cursive; font-size:.65rem;
-  letter-spacing:.2em; color:var(--text); text-transform:uppercase;
-}
-
-.contact-email {
-  font-family:'Baloo 2', cursive; font-size:1.3rem;
-  font-style:italic; color:var(--gold);
-  border-bottom:1px solid rgba(200,164,90,.3); padding-bottom:.3rem;
-}
-
-/* ── SKILL TABS ── */
-.skill-tabs {
-  display:flex; gap:.75rem; margin-bottom:2rem; flex-wrap:wrap;
-}
-.skill-tab {
-  font-family:'Itim', cursive; font-size:.75rem;
-  letter-spacing:.15em; padding:.6rem 1.6rem;
-  background:transparent; border:1px solid var(--border);
-  color:var(--muted); cursor:none;
-  transition:all .3s ease;
-}
-.skill-tab:hover { border-color:var(--red); color:var(--text); }
-.skill-tab.active {
-  background:rgba(224,32,32,.12);
-  border-color:var(--red); color:var(--red2);
-}
-.skill-panel { display:none; }
-.skill-panel.active { display:block; }
-
-/* ════════════════════════════
-   FOOTER
-════════════════════════════ */
-footer {
-  position:relative; z-index:2;
-  padding:2rem 7rem;
-  border-top:1px solid var(--border);
-  display:flex; align-items:center; justify-content:space-between;
-}
-footer p {
-  font-family:'Itim', cursive; font-size:.58rem;
-  letter-spacing:.25em; color:var(--muted); text-transform:uppercase;
-}
-.footer-logo {
-  font-family:'Baloo 2', cursive; font-weight:700;
-  font-size:.9rem; color:var(--text);
-}
-.footer-logo span { color:var(--red); }
-
-/* ════════════════════════════
-   ANIMATIONS
-════════════════════════════ */
-@keyframes fadeLeft {
-  from { opacity:0; transform:translateX(-40px); }
-  to   { opacity:1; transform:translateX(0); }
-}
-@keyframes floatY {
-  0%,100% { transform:translateY(0); }
-  50%     { transform:translateY(-20px); }
-}
-
-.reveal { opacity:0; transform:translateY(30px); transition:opacity .8s ease, transform .8s ease; }
-.reveal.up { opacity:1; transform:none; }
-
-/* ════════════════════════════
-   RESPONSIVE
-════════════════════════════ */
-@media (max-width:900px) {
-  nav { padding:1.2rem 2rem; }
-  .nav-links { display:none; }
-  #hero { padding:0 2rem 0 2rem; }
-  #about, #skills, #portfolio, #stats, #current, #contact, footer { padding-left:2rem; padding-right:2rem; }
-  #about { grid-template-columns:1fr; }
-  .about-right { display:none; }
-  .portfolio-grid { grid-template-columns:1fr; }
-  .stats-row { grid-template-columns:1fr 1fr; }
-  .current-grid { grid-template-columns:1fr; }
-  .hero-num { display:none; }
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChamoyZ Portfolio</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <!-- React & Babel for browser execution -->
+    <script type="importmap">
+        {
+            "imports": {
+                "react": "https://esm.sh/react@18.2.0",
+                "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
+                "lucide-react": "https://esm.sh/lucide-react@0.292.0"
+            }
+        }
+    </script>
+    <script type="module" src="https://esm.sh/run-css"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
+        body { font-family: 'Nunito', 'Kanit', sans-serif; }
+        
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background-color: #2f3136; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background-color: #202225; border-radius: 4px; }
+        
+        /* Glass Effect */
+        .glass-card {
+            background: #2f3136;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease;
+        }
+        .glass-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+            border-color: rgba(88, 101, 242, 0.4);
+        }
+
+        /* Equalizer Animation */
+        @keyframes equalizer {
+            0% { height: 20%; }
+            50% { height: 100%; }
+            100% { height: 20%; }
+        }
+        .bar {
+            width: 4px;
+            background: white;
+            animation: equalizer 1s infinite ease-in-out;
+        }
+        .bar:nth-child(1) { animation-delay: 0.0s; }
+        .bar:nth-child(2) { animation-delay: 0.2s; }
+        .bar:nth-child(3) { animation-delay: 0.4s; }
+        .bar:nth-child(4) { animation-delay: 0.1s; }
+        
+        .paused .bar { animation-play-state: paused; height: 20%; transition: height 0.3s; }
+
+        /* Typewriter Cursor */
+        .typing-cursor::after {
+            content: '|';
+            animation: blink 1s step-end infinite;
+        }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+    </style>
 </head>
-<body>
+<body class="bg-[#36393f] text-[#dcddde]">
+    <div id="root"></div>
 
-<div id="cur"></div>
-<div id="cur-trail"></div>
-<canvas id="bg-canvas"></canvas>
+    <script type="text/babel" data-type="module">
+        import React, { useState, useEffect } from 'react';
+        import { createRoot } from 'react-dom/client';
+        import { 
+            User, Code, Heart, Music, MessageCircle, Github, Twitter, 
+            ExternalLink, Cpu, Palette, Sparkles, Gamepad2, Coffee, 
+            Terminal, Youtube, Facebook, Database, Server, Play, Pause, 
+            Copy, Check, Filter 
+        } from 'lucide-react';
 
-<!-- NAV -->
-<nav id="navbar">
-  <div class="nav-logo">Chedsada<span>.</span></div>
-  <ul class="nav-links">
-    <li><a href="#about">About</a></li>
-    <li><a href="#skills">Skills</a></li>
-    <li><a href="#portfolio">Works</a></li>
-    <li><a href="#contact">Contact</a></li>
-  </ul>
-</nav>
+        const Portfolio = () => {
+            // 1. Time State
+            const [time, setTime] = useState(new Date());
 
-<!-- HERO -->
-<section id="hero">
-  <p class="hero-tag">Available for Projects</p>
-  <h1 class="hero-name">
-    <span class="line1">Chedsada</span>
-    <span class="line2">Pongam</span>
-  </h1>
-  <p class="hero-role">Roblox · SAMP · Client Launcher Developer</p>
-  <p class="hero-desc">
-    นักพัฒนาที่สร้างโลกเกมหลายแพลตฟอร์ม ตั้งแต่ Roblox, SA-MP<br>
-    ไปจนถึง Custom Client Launcher ด้วย Lua, Pawn และ C#
-  </p>
-  <div class="hero-cta-row">
-    <a href="#portfolio" class="btn-primary"><span>ดูผลงาน →</span></a>
-    <a href="#contact" class="btn-outline">ติดต่อฉัน</a>
-  </div>
-  <div class="hero-num">G</div>
-  <div class="scroll-line">Scroll to explore</div>
-</section>
+            // 2. Music Player State
+            const [isPlaying, setIsPlaying] = useState(false);
+            const [musicProgress, setMusicProgress] = useState(30);
 
-<!-- ABOUT -->
-<section id="about">
-  <div class="about-left reveal">
-    <p class="overline">About Me</p>
-    <h2>นักพัฒนาที่ใช้<br><em>โค้ดแทนพู่กัน</em></h2>
-    <p>เชดสาดา — นักพัฒนาเกมหลายแพลตฟอร์มที่สร้างประสบการณ์ตั้งแต่โลก Roblox, เซิร์ฟเวอร์ SA-MP ไปจนถึง Client Launcher ของตัวเอง ครบจบในคนเดียว</p>
-    <p>เชื่อว่าไม่มีแพลตฟอร์มไหนยากเกินไป — มีแค่โค้ดที่ยังไม่ได้เขียน</p>
-    <div class="fun-facts">
-      <div class="fun-fact">📍 Based in Thailand</div>
-      <div class="fun-fact">🔵 Roblox · Lua · Studio</div>
-      <div class="fun-fact">🚗 SA-MP · Pawn Scripting</div>
-      <div class="fun-fact">🖥️ Client Launcher · C# / Electron</div>
-      <div class="fun-fact">🌙 Open for freelance & collab</div>
-    </div>
-  </div>
-  <div class="about-right reveal">
-    <div class="avatar-frame">
-      <div class="avatar-bg" onclick="document.getElementById('avatar-input').click()">
-        <div class="avatar-initials" id="avatar-initials">CP</div>
-        <div class="avatar-upload-hint">
-          <span>📷</span>
-          <span>Upload Photo</span>
-        </div>
-      </div>
-      <input type="file" id="avatar-input" accept="image/*">
-      <div class="frame-corner fc-tl"></div>
-      <div class="frame-corner fc-tr"></div>
-      <div class="frame-corner fc-bl"></div>
-      <div class="frame-corner fc-br"></div>
-    </div>
-    <div class="deco-line-v"></div>
-  </div>
-</section>
+            // 3. Filter State
+            const [filter, setFilter] = useState('All');
 
-<!-- SKILLS -->
-<section id="skills">
-  <div class="section-header reveal">
-    <span class="overline">Expertise</span>
-    <h2>สิ่งที่ฉัน<em>ทำได้ดี</em></h2>
-  </div>
+            // 4. Copy ID State
+            const [copied, setCopied] = useState(false);
 
-  <!-- Platform tabs -->
-  <div class="skill-tabs reveal">
-    <button class="skill-tab active" data-tab="roblox">🔵 Roblox</button>
-    <button class="skill-tab" data-tab="samp">🚗 SA-MP</button>
-    <button class="skill-tab" data-tab="launcher">🖥️ Launcher</button>
-  </div>
+            useEffect(() => {
+                const timer = setInterval(() => setTime(new Date()), 1000);
+                return () => clearInterval(timer);
+            }, []);
 
-  <div class="skill-panel active" id="tab-roblox">
-    <div class="skills-grid">
-      <div class="skill-item">
-        <span class="skill-ico">🔵</span>
-        <p class="skill-name">Lua Scripting</p>
-        <p class="skill-note">Core Language</p>
-        <div class="skill-bar"><div class="skill-bar-fill" data-w="90"></div></div>
-      </div>
-      <div class="skill-item">
-        <span class="skill-ico">🏗️</span>
-        <p class="skill-name">Roblox Studio</p>
-        <p class="skill-note">Environment & Tools</p>
-        <div class="skill-bar"><div class="skill-bar-fill" data-w="95"></div></div>
-      </div>
-      <div class="skill-item">
-        <span class="skill-ico">🎮</span>
-        <p class="skill-name">Game Design</p>
-        <p class="skill-note">Mechanics & Systems</p>
-        <div class="skill-bar"><div class="skill-bar-fill" data-w="85"></div></div>
-      </div>
-      <div class="skill-item">
-        <span class="skill-ico">🎨</span>
-        <p class="skill-name">3D Building & UI</p>
-        <p class="skill-note">Visual & Interface</p>
-        <div class="skill-bar"><div class="skill-bar-fill" data-w="80"></div></div>
-      </div>
-      <div class="skill-item">
-        <span class="skill-ico">⚙️</span>
-        <p class="skill-name">Server / Client Arch</p>
-        <p class="skill-note">RemoteEvents & Anti-Cheat</p>
-        <div class="skill-bar"><div class="skill-bar-fill" data-w="82"></div></div>
-      </div>
-      <div class="skill-item">
-        <span class="skill-ico">💰</span>
-        <p class="skill-name">Monetization</p>
-        <p class="skill-note">Gamepasses & DevEx</p>
-        <div class="skill-bar"><div class="skill-bar-fill" data-w="75"></div></div>
-      </div>
-    </div>
-  </div>
+            // Music Progress Animation
+            useEffect(() => {
+                let interval;
+                if (isPlaying) {
+                interval = setInterval(() => {
+                    setMusicProgress((prev) => (prev >= 100 ? 0 : prev + 1));
+                }, 1000);
+                }
+                return () => clearInterval(interval);
+            }, [isPlaying]);
 
-  <div class="skill-panel" id="tab-samp">
-    <div class="skills-grid">
-      <div class="skill-item">
-        <span class="skill-ico">🔧</span>
-        <p class="skill-name">Pawn Scripting</p>
-        <p class="skill-note">SA-MP Core Language</p>
-        <div class="skill-bar"><div class="skill-bar-fill" data-w="90"></div></div>
-      </div>
-      <div class="skill-item">
-        <span class="skill-ico">🗺️</span>
-        <p class="skill-name">Gamemode Design</p>
-        <p class="skill-note">Full Custom Gamemode</p>
-        <div class="skill-bar"><div class="skill-bar-fill" data-w="87"></div></div>
-      </div>
-      <div class="skill-item">
-        <span class="skill-ico">👥</span>
-        <p class="skill-name">Roleplay Systems</p>
-        <p class="skill-note">Jobs / Houses / Economy</p>
-        <div class="skill-bar"><div class="skill-bar-fill" data-w="85"></div></div>
-      </div>
-      <div class="skill-item">
-        <span class="skill-ico">🗄️</span>
-        <p class="skill-name">MySQL Integration</p>
-        <p class="skill-note">Player Data & Persistence</p>
-        <div class="skill-bar"><div class="skill-bar-fill" data-w="82"></div></div>
-      </div>
-      <div class="skill-item">
-        <span class="skill-ico">⚙️</span>
-        <p class="skill-name">Callback & Event System</p>
-        <p class="skill-note">OnPlayerConnect / Timers</p>
-        <div class="skill-bar"><div class="skill-bar-fill" data-w="88"></div></div>
-      </div>
-      <div class="skill-item">
-        <span class="skill-ico">🛡️</span>
-        <p class="skill-name">Anti-Cheat / Validation</p>
-        <p class="skill-note">Server-side Checks</p>
-        <div class="skill-bar"><div class="skill-bar-fill" data-w="78"></div></div>
-      </div>
-    </div>
-  </div>
+            const handleCopy = () => {
+                navigator.clipboard.writeText("nc.cmz"); // Replace with actual ID
+                setCopied(true);
+                setTimeout(() => setCopied(false), 2000);
+            };
 
-  <div class="skill-panel" id="tab-launcher">
-    <div class="skills-grid">
-      <div class="skill-item">
-        <span class="skill-ico">🖥️</span>
-        <p class="skill-name">Desktop App</p>
-        <p class="skill-note">C# / Electron · Cross-platform</p>
-        <div class="skill-bar"><div class="skill-bar-fill" data-w="88"></div></div>
-      </div>
-      <div class="skill-item">
-        <span class="skill-ico">🔄</span>
-        <p class="skill-name">Auto Updater</p>
-        <p class="skill-note">Delta Patch · Version Control</p>
-        <div class="skill-bar"><div class="skill-bar-fill" data-w="85"></div></div>
-      </div>
-      <div class="skill-item">
-        <span class="skill-ico">🌐</span>
-        <p class="skill-name">Backend API</p>
-        <p class="skill-note">REST · Auth · File Server</p>
-        <div class="skill-bar"><div class="skill-bar-fill" data-w="80"></div></div>
-      </div>
-      <div class="skill-item">
-        <span class="skill-ico">🎨</span>
-        <p class="skill-name">UI/UX Design</p>
-        <p class="skill-note">WPF · Custom Skin · Figma</p>
-        <div class="skill-bar"><div class="skill-bar-fill" data-w="87"></div></div>
-      </div>
-      <div class="skill-item">
-        <span class="skill-ico">🔐</span>
-        <p class="skill-name">Login & License</p>
-        <p class="skill-note">Token Auth · Key System</p>
-        <div class="skill-bar"><div class="skill-bar-fill" data-w="82"></div></div>
-      </div>
-      <div class="skill-item">
-        <span class="skill-ico">📦</span>
-        <p class="skill-name">Installer & Packaging</p>
-        <p class="skill-note">Setup Wizard · Auto-deploy</p>
-        <div class="skill-bar"><div class="skill-bar-fill" data-w="78"></div></div>
-      </div>
-    </div>
-  </div>
-</section>
+            const profile = {
+                name: "ChamoyZ",
+                realName: "Chedsada Pongam",
+                nickname: "Nut",
+                aliases: "ฮั่นแน่ อยากได้ไปทำต่อก็เอาเลย ปล่อย Open Source จ้า",
+                tag: "#Dev",
+                status: "Playing CS2 & Valorant 🎮",
+                bio: "Full-Stack Developer | Game Modder | Digital Creator. Coding client/server systems.",
+                birthday: "27 / 07 / 20XX",
+                role: "Full-Stack & Game Modder",
+                level: 50,
+                exp: "92%",
+                avatar: "https://github.com/ChamoyZ.png",
+                githubUrl: "https://github.com/ChamoyZ",
+                banner: "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExeW5jOThmeWZnNHR1czF5ejR6MW53Nzc5cDljbzBjaDgydGRhdDJvdCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/J6JazAkCVLId91L4yM/giphy.gif",
+                aboutImage: "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExNGE5NnowNmF4OXdrazQ5cHhob3JqdWRzZ3Z0cmpqMWlpc3JzbHM2bSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/k7Uvq149PSOPqYCkVN/giphy.gif"
+            };
 
-<!-- PORTFOLIO -->
-<section id="portfolio">
-  <div class="section-header reveal">
-    <span class="overline">Portfolio</span>
-    <h2>ผลงาน<em>ที่ภาคภูมิใจ</em></h2>
-  </div>
-  <div class="portfolio-grid" style="grid-template-columns:repeat(3,1fr)">
-    <!-- ROBLOX -->
-    <div class="project-card reveal">
-      <div class="project-thumb">
-        <div class="thumb-bg" style="background:linear-gradient(135deg,#001a30,#003d6e,#001a40)"></div>
-        <span class="project-icon">⚔️</span>
-      </div>
-      <div class="project-body">
-        <span class="project-tag">Roblox · RPG</span>
-        <p class="project-title">Shadow Realm RPG</p>
-        <p class="project-desc">เกม RPG สุดมืดหม่น มีระบบ Quest, Level Up และ Boss Raid ครบครัน</p>
-      </div>
-      <div class="project-footer">
-        <p class="project-stat">Visits: <strong>120K+</strong></p>
-        <a href="#" class="project-link">View →</a>
-      </div>
-    </div>
-    <div class="project-card reveal">
-      <div class="project-thumb">
-        <div class="thumb-bg" style="background:linear-gradient(135deg,#001a10,#003d20,#001030)"></div>
-        <span class="project-icon">🏰</span>
-      </div>
-      <div class="project-body">
-        <span class="project-tag">Roblox · Tycoon</span>
-        <p class="project-title">Kingdom Builder Tycoon</p>
-        <p class="project-desc">สร้างอาณาจักรตั้งแต่ศูนย์ ขยายดินแดน พัฒนาเศรษฐกิจ ต่อสู้ Guild อื่น</p>
-      </div>
-      <div class="project-footer">
-        <p class="project-stat">Visits: <strong>210K+</strong></p>
-        <a href="#" class="project-link">View →</a>
-      </div>
-    </div>
-    <!-- SA-MP -->
-    <div class="project-card reveal">
-      <div class="project-thumb">
-        <div class="thumb-bg" style="background:linear-gradient(135deg,#1a0800,#3d1500,#200500)"></div>
-        <span class="project-icon">🚗</span>
-      </div>
-      <div class="project-body">
-        <span class="project-tag">SA-MP · Roleplay</span>
-        <p class="project-title">TH Roleplay Server</p>
-        <p class="project-desc">เซิร์ฟเวอร์ RP ภาษาไทยเต็มรูปแบบ ระบบอาชีพ, บ้าน, รถ, ธุรกิจ เขียนด้วย Pawn Script</p>
-      </div>
-      <div class="project-footer">
-        <p class="project-stat">Players: <strong>200+</strong></p>
-        <a href="#" class="project-link">View →</a>
-      </div>
-    </div>
-    <div class="project-card reveal">
-      <div class="project-thumb">
-        <div class="thumb-bg" style="background:linear-gradient(135deg,#120018,#2a003d,#100010)"></div>
-        <span class="project-icon">🔫</span>
-      </div>
-      <div class="project-body">
-        <span class="project-tag">SA-MP · TDM</span>
-        <p class="project-title">Battle Zone TDM</p>
-        <p class="project-desc">เกมยิงแบบทีม มีระบบ Kill Streak, Rank, Leaderboard และ Custom Weapon</p>
-      </div>
-      <div class="project-footer">
-        <p class="project-stat">Players: <strong>150+</strong></p>
-        <a href="#" class="project-link">View →</a>
-      </div>
-    </div>
-    <!-- LAUNCHER -->
-    <div class="project-card reveal">
-      <div class="project-thumb">
-        <div class="thumb-bg" style="background:linear-gradient(135deg,#00101a,#00253d,#001020)"></div>
-        <span class="project-icon">🖥️</span>
-      </div>
-      <div class="project-body">
-        <span class="project-tag">Launcher · C# / WPF</span>
-        <p class="project-title">GamePortal Launcher</p>
-        <p class="project-desc">Custom Launcher สำหรับเซิร์ฟเวอร์ SA-MP มีระบบ Auto Updater, Login และ News Feed</p>
-      </div>
-      <div class="project-footer">
-        <p class="project-stat">Downloads: <strong>1K+</strong></p>
-        <a href="#" class="project-link">View →</a>
-      </div>
-    </div>
-    <div class="project-card reveal">
-      <div class="project-thumb">
-        <div class="thumb-bg" style="background:linear-gradient(135deg,#001a15,#003d30,#001018)"></div>
-        <span class="project-icon">⚡</span>
-      </div>
-      <div class="project-body">
-        <span class="project-tag">Launcher · Electron</span>
-        <p class="project-title">RoLauncher</p>
-        <p class="project-desc">Launcher สำหรับ Roblox Private Server พร้อมระบบ Account Switcher และ Mod Loader</p>
-      </div>
-      <div class="project-footer">
-        <p class="project-stat">Users: <strong>500+</strong></p>
-        <a href="#" class="project-link">View →</a>
-      </div>
-    </div>
-  </div>
-</section>
+            const skills = [
+                { name: "JavaScript", color: "bg-yellow-400" },
+                { name: "Python", color: "bg-blue-500" },
+                { name: "Pawn (SA-MP)", color: "bg-orange-400" },
+                { name: "MySQL", color: "bg-blue-600" },
+                { name: "Linux", color: "bg-gray-800" },
+                { name: "Git", color: "bg-red-500" }
+            ];
 
-<!-- STATS -->
-<section id="stats">
-  <div class="stats-row">
-    <div class="stat-box reveal">
-      <span class="stat-val" data-target="3">0</span>
-      <span class="stat-lbl">Platforms Mastered</span>
-    </div>
-    <div class="stat-box reveal">
-      <span class="stat-val" data-target="6">0</span>
-      <span class="stat-lbl">Projects Shipped</span>
-    </div>
-    <div class="stat-box reveal">
-      <span class="stat-val" data-target="2000">0</span>
-      <span class="stat-lbl">Total Users / Players</span>
-    </div>
-    <div class="stat-box reveal">
-      <span class="stat-val" data-target="100">0</span>
-      <span class="stat-unit">%</span>
-      <span class="stat-lbl">Passion for Dev</span>
-    </div>
-  </div>
-</section>
+            const allProjects = [
+                {
+                title: "[SAMP] Scottish City",
+                role: "Owner & Developer",
+                desc: "Full server development and management.",
+                tags: ["Pawn", "MySQL"],
+                category: "SAMP",
+                color: "from-blue-600 to-indigo-600"
+                },
+                {
+                title: "[Roblox] Lunar City",
+                role: "Owner & Developer",
+                desc: "Game creation and scripting.",
+                tags: ["Lua", "Roblox Studio"],
+                category: "Roblox",
+                color: "from-purple-500 to-pink-500"
+                },
+                {
+                title: "[SAMP] Someday Mobile",
+                role: "Staff / Contributor",
+                desc: "Mobile compatibility and features.",
+                tags: ["Mobile", "Optimization"],
+                category: "SAMP",
+                color: "from-green-500 to-emerald-500"
+                },
+                {
+                title: "[SAMP] Nolimit City",
+                role: "Client Developer",
+                desc: "Custom client-side systems.",
+                tags: ["Client", "Modding"],
+                category: "SAMP",
+                color: "from-red-500 to-orange-500"
+                }
+            ];
 
-<!-- CURRENTLY WORKING ON -->
-<section id="current">
-  <div class="section-header reveal">
-    <span class="overline">In Progress</span>
-    <h2>กำลัง<em>ทำอยู่ตอนนี้</em></h2>
-  </div>
-  <div class="current-grid">
-    <div class="current-card reveal">
-      <div class="current-badge"><span>In Development</span></div>
-      <p class="current-title">Project: Crimson Tower</p>
-      <p class="current-desc">เกม Tower Defense สุดอลังการ ผสม Roguelike เข้าไป ทุก Run จะไม่ซ้ำกันเลย พร้อมระบบ Co-op 4 คน</p>
-      <div class="progress-bar"><div class="progress-fill" data-w="65"></div></div>
-      <div class="progress-label"><span>Progress</span><strong>65%</strong></div>
-    </div>
-    <div class="current-card reveal">
-      <div class="current-badge"><span>Learning</span></div>
-      <p class="current-title">Advanced Roblox Networking</p>
-      <p class="current-desc">ศึกษา RemoteEvents ขั้นสูง, Anti-cheat systems และ Server-side validation เพื่อยกระดับ Security ของเกม</p>
-      <div class="progress-bar"><div class="progress-fill" data-w="45"></div></div>
-      <div class="progress-label"><span>Progress</span><strong>45%</strong></div>
-    </div>
-  </div>
-</section>
+            const filteredProjects = filter === 'All' 
+                ? allProjects 
+                : allProjects.filter(p => p.category === filter);
 
-<!-- CONTACT -->
-<section id="contact">
-  <div class="contact-inner">
-    <div class="section-header reveal">
-      <span class="overline">Get in Touch</span>
-    </div>
-    <h2 class="reveal">มีโปรเจกต์<br><span class="highlight">ให้ทำร่วมกันมั้ย?</span></h2>
-    <p class="contact-sub reveal">พร้อมรับงาน Freelance · Collaboration · Consultation</p>
-    <div class="social-grid reveal">
-      <a href="#" class="social-btn">
-        <span class="social-icon">🎮</span>
-        <span class="social-label">Roblox Profile</span>
-      </a>
-      <a href="#" class="social-btn">
-        <span class="social-icon">💬</span>
-        <span class="social-label">Discord</span>
-      </a>
-      <a href="#" class="social-btn">
-        <span class="social-icon">🐦</span>
-        <span class="social-label">Twitter / X</span>
-      </a>
-      <a href="#" class="social-btn">
-        <span class="social-icon">📺</span>
-        <span class="social-label">YouTube</span>
-      </a>
-    </div>
-    <p class="contact-email reveal"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="e4878c818097858085a4819c8589948881ca878b89">[email&#160;protected]</a></p>
-  </div>
-</section>
+            const categories = ['All', 'SAMP', 'Roblox'];
 
-<!-- FOOTER -->
-<footer>
-  <p>© 2025 Chedsada Pongam — All rights reserved</p>
-  <div class="footer-logo">Chedsada<span>.</span></div>
-  <p>Made with ❤️ & Lua</p>
-</footer>
+            return (
+                <div className="min-h-screen bg-[#36393f] text-[#dcddde] font-sans selection:bg-[#ffb6c1] selection:text-[#2f3136] p-4 md:p-8 relative overflow-hidden">
+                {/* Background Decor */}
+                <div className="absolute top-0 left-0 w-full h-full pointer-events-none opacity-50">
+                    <div className="absolute top-10 left-10 text-[#5865F2] opacity-20 animate-pulse"><Sparkles size={48} /></div>
+                    <div className="absolute bottom-20 right-20 text-[#ffb6c1] opacity-20 animate-bounce"><Heart size={32} /></div>
+                    <div className="absolute top-1/2 right-10 text-[#98ff98] opacity-20"><Code size={64} /></div>
+                </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-/* ─── CURSOR ─── */
-const cur = document.getElementById('cur');
-const trail = document.getElementById('cur-trail');
-let mx=0,my=0,tx=0,ty=0;
-document.addEventListener('mousemove',e=>{
-  mx=e.clientX; my=e.clientY;
-  cur.style.left=(mx-5)+'px'; cur.style.top=(my-5)+'px';
-});
-setInterval(()=>{
-  tx+=(mx-tx-18)*.14; ty+=(my-ty-18)*.14;
-  trail.style.left=tx+'px'; trail.style.top=ty+'px';
-},16);
-document.querySelectorAll('a,button,.skill-item,.project-card,.social-btn').forEach(el=>{
-  el.addEventListener('mouseenter',()=>{ cur.style.transform='scale(2.5)'; trail.style.transform='scale(1.4)'; trail.style.opacity='1'; });
-  el.addEventListener('mouseleave',()=>{ cur.style.transform='scale(1)'; trail.style.transform='scale(1)'; trail.style.opacity='.6'; });
-});
+                <div className="max-w-7xl mx-auto">
+                    {/* Header Section */}
+                    <header className="flex justify-between items-center mb-8 bg-[#202225] p-4 rounded-2xl border-b-4 border-[#5865F2]">
+                    <div className="flex items-center gap-3">
+                        <Terminal className="text-[#5865F2]" size={32} />
+                        <div>
+                        <h1 className="text-2xl font-bold text-white tracking-wider">Chamoy<span className="text-[#5865F2]">Z</span>💕</h1>
+                        <p className="text-xs text-[#b9bbbe] font-mono">{profile.aliases}</p>
+                        </div>
+                    </div>
+                    <div className="hidden md:flex items-center gap-4 text-sm font-semibold text-[#b9bbbe]">
+                        <span>{time.toLocaleTimeString('th-TH')}</span>
+                        <div className="h-4 w-[1px] bg-gray-600"></div>
+                        <span className="flex items-center gap-2 text-[#43b581]"><div className="w-3 h-3 rounded-full bg-[#43b581] animate-pulse"></div> Online</span>
+                    </div>
+                    </header>
 
-/* ─── CANVAS PARTICLES ─── */
-const cv=document.getElementById('bg-canvas'), cx=cv.getContext('2d');
-let W,H; const resize=()=>{ W=cv.width=innerWidth; H=cv.height=innerHeight; };
-window.addEventListener('resize',resize); resize();
+                    {/* Bento Grid Layout */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 auto-rows-[minmax(100px,auto)]">
+                    
+                    {/* 1. Profile Card */}
+                    <div className="glass-card col-span-1 md:col-span-2 row-span-2 p-0 flex flex-col justify-between relative overflow-hidden group">
+                        <div className="absolute top-0 left-0 w-full h-32 overflow-hidden z-0">
+                        {profile.banner ? (
+                            <>
+                            <img src={profile.banner} alt="Banner" className="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity duration-500" />
+                            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#2f3136]"></div>
+                            </>
+                        ) : (
+                            <div className="w-full h-full bg-gradient-to-r from-[#5865F2] to-[#ffb6c1] opacity-80"></div>
+                        )}
+                        </div>
+                        
+                        <div className="relative z-10 mt-12 px-6 flex flex-col md:flex-row items-start md:items-end gap-4">
+                        <div className="relative">
+                            <div className="w-32 h-32 rounded-full border-4 border-[#2f3136] bg-gray-700 overflow-hidden relative shadow-xl">
+                            <img src={profile.avatar} alt="Profile" className="w-full h-full object-cover" />
+                            </div>
+                            <div className="absolute bottom-1 right-1 w-8 h-8 bg-[#43b581] rounded-full border-4 border-[#2f3136] flex items-center justify-center" title="Online">
+                            <div className="w-full h-full rounded-full animate-ping opacity-20 bg-white absolute"></div>
+                            </div>
+                        </div>
+                        <div className="mb-2">
+                            <div className="flex items-center gap-2">
+                            <h2 className="text-3xl font-bold text-white flex items-center gap-2 cursor-pointer hover:underline decoration-[#5865F2] drop-shadow-md" onClick={handleCopy}>
+                                {profile.name}
+                            </h2>
+                            <span className={`text-xs px-2 py-0.5 rounded cursor-pointer transition-all shadow-lg ${copied ? 'bg-green-500 text-white' : 'bg-[#202225]/80 backdrop-blur-md text-[#b9bbbe] hover:bg-[#40444b]'}`} onClick={handleCopy}>
+                                {copied ? <span className="flex items-center gap-1"><Check size={10}/> Copied!</span> : <span className="flex items-center gap-1"><Copy size={10}/> ID</span>}
+                            </span>
+                            </div>
+                            <div className="flex flex-wrap gap-2 mt-2">
+                            <span className="px-3 py-1 rounded-full bg-[#202225]/80 backdrop-blur-md text-xs font-bold text-[#5865F2] border border-[#5865F2] flex items-center gap-1 shadow-sm"><Code size={12}/> DEVELOPER</span>
+                            <span className="px-3 py-1 rounded-full bg-[#202225]/80 backdrop-blur-md text-xs font-bold text-[#ffb6c1] border border-[#ffb6c1] flex items-center gap-1 shadow-sm"><Gamepad2 size={12}/> MODDER</span>
+                            </div>
+                        </div>
+                        </div>
 
-const pts=Array.from({length:180},()=>({
-  x:Math.random()*2000, y:Math.random()*2000,
-  r:Math.random()*1.2+.3,
-  a:Math.random(), da:(Math.random()-.5)*.006,
-  vx:(Math.random()-.5)*.05, vy:(Math.random()-.5)*.05,
-  hue: Math.random()>.75 ? 0 : 36
-}));
+                        <div className="mt-6 mx-6 mb-6 bg-[#202225] p-4 rounded-xl border-l-4 border-[#faa61a]">
+                        <h3 className="text-[#b9bbbe] text-xs uppercase font-bold mb-2">Who Am I?</h3>
+                        <div className="text-sm space-y-1 text-white relative z-10">
+                            <p>👤 <span className="text-[#b9bbbe]">Name:</span> {profile.realName}</p>
+                            <p>💬 <span className="text-[#b9bbbe]">Nickname:</span> {profile.nickname}</p>
+                            <p>🎂 <span className="text-[#b9bbbe]">Birthday:</span> {profile.birthday}</p>
+                            <p>🎮 <span className="text-[#b9bbbe]">Hobbies:</span> Coding client/server systems, CS2 & Valorant</p>
+                        </div>
+                        {profile.aboutImage && (
+                            <div className="mt-3 rounded-lg overflow-hidden border border-gray-700/50 shadow-inner">
+                            <img src={profile.aboutImage} alt="About Decoration" className="w-full h-32 object-cover opacity-80 hover:opacity-100 transition-opacity" />
+                            </div>
+                        )}
+                        </div>
 
-function draw(){
-  cx.clearRect(0,0,W,H);
-  /* red nebula */
-  [
-    {x:.2,y:.3,r:350,h:'rgba(224,32,32,.05)'},
-    {x:.8,y:.7,r:280,h:'rgba(200,164,90,.04)'},
-    {x:.5,y:.1,r:200,h:'rgba(224,32,32,.03)'},
-  ].forEach(n=>{
-    const g=cx.createRadialGradient(n.x*W,n.y*H,0,n.x*W,n.y*H,n.r);
-    g.addColorStop(0,n.h); g.addColorStop(1,'transparent');
-    cx.fillStyle=g; cx.fillRect(0,0,W,H);
-  });
-  pts.forEach(p=>{
-    p.x+=p.vx; p.y+=p.vy; p.a+=p.da;
-    if(p.a<0||p.a>1)p.da*=-1;
-    if(p.x<0)p.x=W; if(p.x>W)p.x=0;
-    if(p.y<0)p.y=H; if(p.y>H)p.y=0;
-    cx.save(); cx.globalAlpha=p.a*.7;
-    cx.fillStyle=p.hue===0?'#ff4444':'#c8a45a';
-    if(p.r>1) cx.shadowBlur=6, cx.shadowColor=cx.fillStyle;
-    cx.beginPath(); cx.arc(p.x%W,p.y%H,p.r,0,Math.PI*2); cx.fill();
-    cx.restore();
-  });
-  requestAnimationFrame(draw);
-}
-draw();
+                        <div className="px-6 pb-4 pt-0 flex justify-between items-center text-xs font-mono text-[#b9bbbe]">
+                        <span>Role: {profile.role}</span>
+                        <a href={profile.githubUrl} target="_blank" rel="noreferrer" className="hover:text-white transition-colors">github.com/ChamoyZ</a>
+                        </div>
+                    </div>
 
-/* ─── NAVBAR SCROLL ─── */
-window.addEventListener('scroll',()=>{
-  document.getElementById('navbar').classList.toggle('scrolled',scrollY>60);
-});
+                    {/* 2. Status/Activity */}
+                    <div className="glass-card col-span-1 p-5 flex flex-col gap-3 justify-center items-center text-center bg-[#2f3136] hover:bg-[#292b2f]">
+                        <div className="w-16 h-16 rounded-2xl bg-[#43b581] flex items-center justify-center text-white mb-2 shadow-lg shadow-green-500/20 animate-bounce">
+                        <Gamepad2 size={32} />
+                        </div>
+                        <h3 className="font-bold text-white text-lg">Current Activity</h3>
+                        <p className="text-[#b9bbbe] text-sm italic typing-cursor">"{profile.status}"</p>
+                    </div>
 
-/* ─── REVEAL ─── */
-const revEls=document.querySelectorAll('.reveal');
-const ro=new IntersectionObserver(entries=>{
-  entries.forEach((e,i)=>{
-    if(e.isIntersecting) setTimeout(()=>e.target.classList.add('up'),i*70);
-  });
-},{threshold:.12});
-revEls.forEach(r=>ro.observe(r));
+                    {/* 3. Social Links */}
+                    <div className="glass-card col-span-1 p-5 flex flex-col justify-center gap-3">
+                        <h3 className="text-xs uppercase font-bold text-[#b9bbbe] mb-2">Connect with Me</h3>
+                        <button className="flex items-center gap-3 w-full bg-[#202225] hover:bg-[#FF0000] p-3 rounded-lg transition-colors group">
+                        <Youtube size={20} className="text-white group-hover:text-white" />
+                        <span className="text-sm font-semibold text-[#b9bbbe] group-hover:text-white">YouTube</span>
+                        </button>
+                        <button className="flex items-center gap-3 w-full bg-[#202225] hover:bg-[#5865F2] p-3 rounded-lg transition-colors group">
+                        <MessageCircle size={20} className="text-white group-hover:text-white" />
+                        <span className="text-sm font-semibold text-[#b9bbbe] group-hover:text-white">Discord</span>
+                        </button>
+                        <button className="flex items-center gap-3 w-full bg-[#202225] hover:bg-[#1877F2] p-3 rounded-lg transition-colors group">
+                        <Facebook size={20} className="text-white group-hover:text-white" />
+                        <span className="text-sm font-semibold text-[#b9bbbe] group-hover:text-white">Facebook</span>
+                        </button>
+                    </div>
 
-/* ─── COUNT UP ─── */
-document.querySelectorAll('.stat-val[data-target]').forEach(el=>{
-  const io=new IntersectionObserver(([e])=>{
-    if(!e.isIntersecting)return;
-    const t=+el.dataset.target, step=t/70;
-    let c=0; const ti=setInterval(()=>{
-      c=Math.min(c+step,t); el.textContent=Math.floor(c);
-      if(c>=t)clearInterval(ti);
-    },20);
-    io.disconnect();
-  },{threshold:.5});
-  io.observe(el);
-});
+                    {/* 4. Tech Stack */}
+                    <div className="glass-card col-span-1 md:col-span-2 p-6 flex flex-col justify-center">
+                        <div className="flex items-center gap-2 mb-4">
+                        <Cpu className="text-[#ffb6c1]" />
+                        <h3 className="text-xl font-bold text-white">Tech Stack & Tools</h3>
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                        {skills.map((skill, i) => (
+                            <div key={i} className="group relative">
+                            <div className={`px-4 py-2 rounded-md bg-[#202225] hover:${skill.color} transition-colors cursor-default border border-gray-700 flex items-center gap-2`}>
+                                <div className={`w-2 h-2 rounded-full ${skill.color}`}></div>
+                                <span className="text-sm font-semibold group-hover:text-white transition-colors">{skill.name}</span>
+                            </div>
+                            </div>
+                        ))}
+                        </div>
+                        <div className="flex gap-4 mt-4 text-[#72767d] justify-center md:justify-start">
+                        <Database size={20} />
+                        <Terminal size={20} />
+                        <Server size={20} />
+                        </div>
+                    </div>
 
-/* ─── SKILL TABS ─── */
-document.querySelectorAll('.skill-tab').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.skill-tab').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.skill-panel').forEach(p => p.classList.remove('active'));
-    btn.classList.add('active');
-    document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
-    // re-animate bars in new panel
-    document.querySelectorAll('#tab-' + btn.dataset.tab + ' .skill-bar-fill').forEach(bar => {
-      bar.style.width = '0';
-      setTimeout(() => { bar.style.width = bar.dataset.w + '%'; }, 50);
-    });
-  });
-});
+                    {/* 5. Music Player */}
+                    <div className="glass-card col-span-1 p-4 flex flex-col gap-3 relative overflow-hidden bg-gradient-to-br from-[#1db954] to-[#191414]">
+                        <div className="absolute top-2 right-2 opacity-50"><Music size={16} color="white"/></div>
+                        <div className="flex gap-3 items-center z-10">
+                        <button 
+                            onClick={() => setIsPlaying(!isPlaying)}
+                            className="w-14 h-14 bg-black/30 hover:bg-black/50 transition-colors rounded-lg flex items-center justify-center cursor-pointer group"
+                        >
+                            {isPlaying ? <Pause size={24} className="text-white"/> : <Play size={24} className="text-white ml-1"/>}
+                        </button>
+                        <div className="flex-1 min-w-0">
+                            <h4 className="text-white font-bold truncate text-sm">ลิตเติ้ลจ้อนห์ (Jeaw Lek) - สามานย์</h4>
+                            <div className={`flex items-end gap-1 h-3 mt-1 ${isPlaying ? '' : 'paused'}`}>
+                                <div className="bar h-full bg-[#1db954]"></div>
+                                <div className="bar h-full bg-[#1db954]"></div>
+                                <div className="bar h-full bg-[#1db954]"></div>
+                                <div className="bar h-full bg-[#1db954]"></div>
+                            </div>
+                        </div>
+                        </div>
+                        <div className="w-full bg-black/20 h-1.5 rounded-full mt-2 overflow-hidden cursor-pointer">
+                            <div 
+                            className="h-full bg-white rounded-full relative transition-all duration-1000 linear"
+                            style={{ width: `${musicProgress}%` }}
+                            >
+                            </div>
+                        </div>
+                        <div className="flex justify-between text-[10px] text-white/80 font-mono mt-1">
+                        <span>{Math.floor((musicProgress / 100) * 180 / 60)}:{((Math.floor((musicProgress / 100) * 180) % 60) + '').padStart(2, '0')}</span>
+                        <span>3:00</span>
+                        </div>
+                    </div>
 
-/* ─── SKILL BARS & PROGRESS BARS ─── */
-document.getElementById('avatar-input').addEventListener('change', function(e){
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = function(ev){
-    const bg = document.querySelector('.avatar-bg');
-    let img = bg.querySelector('img');
-    if (!img) { img = document.createElement('img'); bg.appendChild(img); }
-    img.src = ev.target.result;
-    document.getElementById('avatar-initials').style.display = 'none';
-  };
-  reader.readAsDataURL(file);
-});
+                    {/* 6. EXP / Stats */}
+                    <div className="glass-card col-span-1 p-6 flex flex-col justify-center items-center relative">
+                        <div className="absolute top-3 left-3 text-xs font-bold text-[#b9bbbe]">LEVEL</div>
+                        <div className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#ffb6c1] to-[#5865F2]">
+                        {profile.level}
+                        </div>
+                        <div className="w-full mt-3">
+                        <div className="flex justify-between text-xs mb-1 text-[#dcddde]">
+                            <span>EXP</span>
+                            <span>{profile.exp}</span>
+                        </div>
+                        <div className="w-full bg-[#202225] h-3 rounded-full overflow-hidden border border-gray-700">
+                            <div className="h-full bg-[#5865F2] w-[92%] rounded-full relative overflow-hidden">
+                                <div className="absolute top-0 left-0 w-full h-full bg-white/20 animate-pulse"></div>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
 
-function animateBars(selector, attr){
-  document.querySelectorAll(selector).forEach(el=>{
-    const io=new IntersectionObserver(([e])=>{
-      if(!e.isIntersecting)return;
-      el.style.width = el.dataset[attr] + '%';
-      io.disconnect();
-    },{threshold:.5});
-    io.observe(el.parentElement);
-  });
-}
-animateBars('.skill-bar-fill','w');
-animateBars('.progress-fill','w');
+                    {/* 7. Featured Projects */}
+                    <div className="col-span-1 md:col-span-3 lg:col-span-4 mt-4">
+                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4 px-2">
+                        <div className="flex items-center gap-2">
+                            <Palette className="text-[#ffb6c1]" />
+                            <h3 className="text-xl font-bold text-white">Latest Projects</h3>
+                        </div>
+                        <div className="flex bg-[#202225] p-1 rounded-lg self-start">
+                            {categories.map(cat => (
+                            <button
+                                key={cat}
+                                onClick={() => setFilter(cat)}
+                                className={`px-4 py-1 rounded-md text-sm font-semibold transition-colors ${
+                                filter === cat 
+                                    ? 'bg-[#5865F2] text-white' 
+                                    : 'text-[#b9bbbe] hover:bg-[#2f3136] hover:text-white'
+                                }`}
+                            >
+                                {cat}
+                            </button>
+                            ))}
+                        </div>
+                        </div>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        {filteredProjects.map((project, i) => (
+                            <div key={i} className="bg-[#2f3136] rounded-xl overflow-hidden hover:transform hover:scale-[1.02] transition-all duration-300 shadow-lg border border-gray-800 group cursor-pointer flex flex-col h-full animate-fade-in">
+                                <div className={`h-24 bg-gradient-to-r ${project.color} relative p-4 flex items-end`}>
+                                <div className="absolute top-3 right-3 bg-black/20 backdrop-blur-sm p-1.5 rounded-full hover:bg-white/20 transition-colors">
+                                    <ExternalLink size={14} className="text-white" />
+                                </div>
+                                <span className="text-[10px] font-bold uppercase tracking-wider text-white bg-black/30 px-2 py-0.5 rounded backdrop-blur-md">
+                                    {project.role.split(" ")[0]}
+                                </span>
+                                </div>
+                                <div className="p-4 flex-1 flex flex-col">
+                                <h4 className="text-base font-bold text-white mb-1 group-hover:text-[#ffb6c1] transition-colors truncate">{project.title}</h4>
+                                <p className="text-xs text-[#b9bbbe] mb-3 flex-1">{project.desc}</p>
+                                <div className="flex flex-wrap gap-1 mt-auto">
+                                    {project.tags.map((tag, t) => (
+                                    <span key={t} className="text-[10px] font-mono bg-[#202225] text-[#dcddde] px-1.5 py-0.5 rounded border border-gray-700">
+                                        #{tag}
+                                    </span>
+                                    ))}
+                                </div>
+                                </div>
+                            </div>
+                        ))}
+                        </div>
+                    </div>
 
-/* ══════════════════════════════════════
-   COPY PROTECTION
-══════════════════════════════════════ */
+                    {/* 8. Contact / Message */}
+                    <div className="glass-card col-span-1 md:col-span-3 lg:col-span-4 p-6 flex flex-col md:flex-row items-center justify-between gap-4 bg-gradient-to-r from-[#2f3136] to-[#202225]">
+                        <div className="flex items-center gap-4">
+                        <div className="p-3 bg-[#5865F2]/20 rounded-full text-[#5865F2]">
+                            <Github size={24} />
+                        </div>
+                        <div>
+                            <h3 className="text-white font-bold">More on GitHub</h3>
+                            <p className="text-[#b9bbbe] text-sm">Check out my source codes & contributions.</p>
+                        </div>
+                        </div>
+                        <a href={profile.githubUrl} target="_blank" rel="noopener noreferrer" className="discord-btn text-white px-8 py-3 rounded-full font-bold shadow-lg shadow-indigo-500/30 flex items-center gap-2 transform hover:scale-105 transition-transform w-full md:w-auto justify-center">
+                        <span>Visit GitHub</span>
+                        <Sparkles size={16} />
+                        </a>
+                    </div>
 
-// 1. Disable right-click
-document.addEventListener('contextmenu', e => { e.preventDefault(); showToast('🔒 ป้องกันการคัดลอก'); });
+                    </div>
 
-// 2. Disable text selection
-document.addEventListener('selectstart', e => e.preventDefault());
-document.addEventListener('dragstart',   e => e.preventDefault());
+                    {/* Footer */}
+                    <footer className="mt-12 text-center text-[#72767d] text-xs pb-8">
+                    <p>© {new Date().getFullYear()} {profile.name}. All rights reserved.</p>
+                    <p className="mt-1">Designed with <Heart size={10} className="inline text-[#ffb6c1]" /> & Code</p>
+                    </footer>
+                </div>
+                </div>
+            );
+        };
 
-// 3. Block keyboard shortcuts
-document.addEventListener('keydown', e => {
-  const blocked = [
-    e.ctrlKey && e.key === 'u',   // View Source
-    e.ctrlKey && e.key === 's',   // Save
-    e.ctrlKey && e.key === 'a',   // Select All
-    e.ctrlKey && e.key === 'c',   // Copy
-    e.ctrlKey && e.shiftKey && e.key === 'i', // DevTools
-    e.ctrlKey && e.shiftKey && e.key === 'j', // DevTools Console
-    e.ctrlKey && e.shiftKey && e.key === 'c', // Inspect
-    e.key === 'F12',
-  ];
-  if (blocked.some(Boolean)) {
-    e.preventDefault();
-    showToast('🔒 ฟังก์ชันนี้ถูกปิดใช้งาน');
-  }
-});
-
-// 4. Detect DevTools open (window size trick)
-let devOpen = false;
-setInterval(() => {
-  const threshold = 160;
-  const isOpen = window.outerWidth - window.innerWidth > threshold
-               || window.outerHeight - window.innerHeight > threshold;
-  if (isOpen && !devOpen) {
-    devOpen = true;
-    document.body.style.filter = 'blur(8px)';
-    showToast('🔒 DevTools ถูกตรวจพบ');
-  } else if (!isOpen && devOpen) {
-    devOpen = false;
-    document.body.style.filter = '';
-  }
-}, 1000);
-
-// 5. Disable copy via clipboard
-document.addEventListener('copy', e => {
-  e.clipboardData.setData('text/plain', '© Chedsada Pongam — All Rights Reserved');
-  e.preventDefault();
-  showToast('🔒 ไม่อนุญาตให้คัดลอก');
-});
-
-// 6. Toast notification
-function showToast(msg) {
-  let t = document.getElementById('cp-toast');
-  if (!t) {
-    t = document.createElement('div');
-    t.id = 'cp-toast';
-    t.style.cssText = `
-      position:fixed; bottom:2rem; left:50%; transform:translateX(-50%) translateY(20px);
-      background:rgba(224,32,32,0.15); border:1px solid rgba(224,32,32,0.4);
-      backdrop-filter:blur(12px); color:#ff6666;
-      font-family:'Itim',cursive; font-size:.75rem; letter-spacing:.2em;
-      padding:.75rem 2rem; z-index:99999; opacity:0;
-      transition:all .3s ease; pointer-events:none; white-space:nowrap;
-    `;
-    document.body.appendChild(t);
-  }
-  t.textContent = msg;
-  t.style.opacity = '1';
-  t.style.transform = 'translateX(-50%) translateY(0)';
-  clearTimeout(t._timer);
-  t._timer = setTimeout(() => {
-    t.style.opacity = '0';
-    t.style.transform = 'translateX(-50%) translateY(20px)';
-  }, 2500);
-}
-
-// 7. Watermark in console
-console.log('%c© Chedsada Pongam', 'color:#e02020;font-family:serif;font-size:2rem;font-weight:bold;');
-console.log('%cAll rights reserved. Unauthorized copying is prohibited.', 'color:#c8a45a;font-size:.9rem;');
-
-</script>
+        const root = createRoot(document.getElementById('root'));
+        root.render(<Portfolio />);
+    </script>
 </body>
 </html>
