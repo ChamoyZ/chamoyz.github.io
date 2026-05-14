@@ -68,9 +68,10 @@
                 
                 // หา Device ที่มี Service 01F0
                 bleDevice = await navigator.bluetooth.requestDevice({
-                    acceptAllDevices: true,
-                    optionalServices: [0x01F0] 
-                });
+    					filters: [{ namePrefix: 'beambox' }], 
+    					optionalServices: ['01f0'] // ใส่เป็น String แทน เผื่อ Bluefy พาร์สโค้ดไม่ผ่าน
+				});
+
 
                 log(`Found ${bleDevice.name}. Connecting to GATT...`, 'info');
 
