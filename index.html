@@ -94,13 +94,15 @@
 
             } catch (error) {
                 log(`Error: ${error.message}`, 'error');
+                log('Error: ' + error, 'error');
             }
         });
 
         // 2. ฟังก์ชันหลักสำหรับยิง Payload เข้าป้าย
         async function sendPayload(text) {
             if (!badgeCharacteristic) {
-                log('Error: Device not connected!', 'error');
+                //log('Error: Device not connected!', 'error');
+                log('Error: ' + error, 'error');
                 return;
             }
             try {
