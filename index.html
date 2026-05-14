@@ -3,51 +3,142 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>e-Badge Lite Hacker</title>
+    <title>SyncForge Badge Terminal</title>
     <style>
-        body { background-color: #121212; color: #00ff00; font-family: monospace; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
-        button { background-color: #00ff00; color: #000; border: none; padding: 15px 30px; font-size: 1.2rem; cursor: pointer; font-family: monospace; font-weight: bold; border-radius: 5px; }
-        button:active { background-color: #00cc00; }
-        #status { margin-top: 20px; font-size: 1rem; }
+        :root { --main-color: #00ffcc; --bg-color: #0a0a0a; --panel-bg: #1a1a1a; }
+        body { background-color: var(--bg-color); color: var(--main-color); font-family: 'Courier New', Courier, monospace; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box; }
+        .container { background-color: var(--panel-bg); padding: 30px; border-radius: 10px; border: 1px solid var(--main-color); width: 100%; max-width: 400px; box-shadow: 0 0 15px rgba(0, 255, 204, 0.2); }
+        h2 { text-align: center; margin-top: 0; text-transform: uppercase; font-size: 1.2rem; letter-spacing: 2px; }
+        button { background-color: transparent; color: var(--main-color); border: 1px solid var(--main-color); padding: 12px; font-size: 1rem; cursor: pointer; font-family: inherit; font-weight: bold; width: 100%; margin-bottom: 15px; transition: all 0.2s ease; text-transform: uppercase; }
+        button:active, button:hover { background-color: var(--main-color); color: #000; }
+        input[type="text"] { width: 100%; padding: 12px; margin-bottom: 15px; background-color: #000; border: 1px solid #555; color: #fff; font-family: inherit; font-size: 1rem; box-sizing: border-box; outline: none; }
+        input[type="text"]:focus { border-color: var(--main-color); }
+        .log-box { background-color: #000; color: #aaa; font-size: 0.85rem; padding: 10px; border-radius: 5px; height: 100px; overflow-y: auto; border: 1px solid #333; margin-top: 10px; }
+        .log-entry { margin-bottom: 5px; }
+        .success { color: #00ff00; }
+        .error { color: #ff3333; }
+        .divider { border-bottom: 1px dashed #333; margin: 20px 0; }
     </style>
 </head>
 <body>
 
-    <h2>🔥 Badge Control Panel</h2>
-    <button id="connectBtn">Connect BLE Badge</button>
-    <div id="status">Status: Waiting...</div>
+    <div class="container">
+        <h2>🔌 Badge Terminal</h2>
+        
+        <button id="connectBtn">1. Connect BLE Badge</button>
+
+        <div class="divider"></div>
+
+        <input type="text" id="textInput" placeholder="Enter text to display..." disabled>
+        <button id="sendCustomBtn" disabled>2. Send Custom Text</button>
+        
+        <button id="sendApiBtn" disabled>3. Send Someday City Status</button>
+
+        <div class="log-box" id="logBox">
+            <div class="log-entry">> System initialized. Ready to connect.</div>
+        </div>
+    </div>
 
     <script>
-        document.getElementById('connectBtn').addEventListener('click', async () => {
-            const statusDiv = document.getElementById('status');
+        // Global variables สำหรับเก็บสถานะ Bluetooth
+        let bleDevice = null;
+        let badgeCharacteristic = null;
+
+        // UI Elements
+        const connectBtn = document.getElementById('connectBtn');
+        const sendCustomBtn = document.getElementById('sendCustomBtn');
+        const sendApiBtn = document.getElementById('sendApiBtn');
+        const textInput = document.getElementById('textInput');
+        const logBox = document.getElementById('logBox');
+
+        // ฟังก์ชันอัปเดต Log หน้าเว็บ
+        function log(message, type = 'info') {
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            const time = new Date().toLocaleTimeString('th-TH', { hour12: false });
+            entry.innerText = `[${time}] ${message}`;
+            logBox.appendChild(entry);
+            logBox.scrollTop = logBox.scrollHeight;
+        }
+
+        // 1. ระบบเชื่อมต่อ BLE
+        connectBtn.addEventListener('click', async () => {
             try {
-                statusDiv.innerText = "Status: Scanning for devices...";
+                log('Scanning for devices...', 'info');
                 
-                // สแกนหาอุปกรณ์ Bluetooth ทั้งหมดรอบตัว
-                const device = await navigator.bluetooth.requestDevice({
+                // หา Device ที่มี Service 01F0
+                bleDevice = await navigator.bluetooth.requestDevice({
                     acceptAllDevices: true,
-                    // Note: ถ้าได้ UUID ของ Service ป้ายมาแล้ว ค่อยมาใส่ใน optionalServices
-                    // optionalServices: ['0000fee0-0000-1000-8000-00805f9b34fb'] 
+                    optionalServices: [0x01F0] 
                 });
 
-                statusDiv.innerText = `Status: Found ${device.name}! Connecting...`;
+                log(`Found ${bleDevice.name}. Connecting to GATT...`, 'info');
 
-                // พยายามเชื่อมต่อเข้ากับ GATT Server ของป้าย
-                const server = await device.gatt.connect();
-                statusDiv.innerText = `Status: 🚀 Connected to ${device.name} successfully!`;
-                console.log(server);
+                const server = await bleDevice.gatt.connect();
+                log('GATT Connected. Fetching Service 01F0...', 'info');
 
-                // สมมติว่าดึง Data เตรียมยิงเข้าป้าย
-                const payloadText = "Someday City: 150 Players Online";
-                console.log('Mock Payload:', payloadText);
+                const service = await server.getPrimaryService(0x01F0);
                 
-                alert('คอนเนกต์ติดแล้ว! สเตปต่อไปคือแกะรอย Characteristic UUID เพื่อยิง Hex Code ทับของเดิม');
+                // ล็อกเป้าไปที่ท่อยิง Data 01F1
+                badgeCharacteristic = await service.getCharacteristic(0x01F1);
+                
+                log('Target Locked (01F1). Ready to inject!', 'success');
+
+                // ปลดล็อกปุ่มให้ใช้งานได้
+                connectBtn.innerText = "Connected ✅";
+                connectBtn.style.borderColor = "#00ff00";
+                connectBtn.style.color = "#00ff00";
+                textInput.disabled = false;
+                sendCustomBtn.disabled = false;
+                sendApiBtn.disabled = false;
 
             } catch (error) {
-                statusDiv.innerText = `Status: Error - ${error.message}`;
-                console.error(error);
+                log(`Error: ${error.message}`, 'error');
             }
         });
+
+        // 2. ฟังก์ชันหลักสำหรับยิง Payload เข้าป้าย
+        async function sendPayload(text) {
+            if (!badgeCharacteristic) {
+                log('Error: Device not connected!', 'error');
+                return;
+            }
+            try {
+                // แปลง Text เป็น Hex (Uint8Array)
+                const encoder = new TextEncoder();
+                const payload = encoder.encode(text);
+
+                // สาดเข้าป้ายแบบ Write Without Response
+                await badgeCharacteristic.writeValueWithoutResponse(payload);
+                log(`Payload Sent: "${text}"`, 'success');
+            } catch (error) {
+                log(`Send Failed: ${error.message}`, 'error');
+            }
+        }
+
+        // 3. ผูกปุ่มเข้ากับฟังก์ชันยิง Data
+        sendCustomBtn.addEventListener('click', () => {
+            const text = textInput.value;
+            if (text.trim() === "") {
+                log('Error: Text cannot be empty.', 'error');
+                return;
+            }
+            sendPayload(text);
+        });
+
+        // 4. ตัวอย่างการดึง API แล้วยิงเข้าป้ายอัตโนมัติ
+        sendApiBtn.addEventListener('click', async () => {
+            log('Fetching API data...', 'info');
+            
+            // ตรงนี้พี่สามารถเปลี่ยน URL ไปหาเซิร์ฟเวอร์ Database ของตัวเองได้เลย
+            // สมมติว่านี่คือ API จำลอง
+            setTimeout(() => {
+                const mockPlayers = Math.floor(Math.random() * 200) + 50;
+                const statusText = `S-City: ${mockPlayers} Online`;
+                sendPayload(statusText);
+            }, 1000); 
+        });
+
     </script>
 </body>
 </html>
