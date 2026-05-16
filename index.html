@@ -1,1405 +1,412 @@
 <!DOCTYPE html>
-
 <html lang="th">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My Discord Profile</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SkyDev — Links</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
 <style>
-  :root {
-    --bg-primary: #313338;
-    --bg-secondary: #2b2d31;
-    --bg-tertiary: #1e1f22;
-    --bg-sidebar: #2b2d31;
-    --bg-channel: #313338;
-    --blurple: #5865f2;
-    --blurple-hover: #4752c4;
-    --blurple-glow: rgba(88,101,242,0.3);
-    --green: #23a55a;
-    --yellow: #f0b232;
-    --red: #f23f42;
-    --text-normal: #dbdee1;
-    --text-muted: #80848e;
-    --text-link: #00a8fc;
-    --header-primary: #f2f3f5;
-    --channel-default: #80848e;
-    --channel-selected: #dbdee1;
-    --interactive-hover: #dbdee1;
-    --separator: rgba(255,255,255,0.06);
-    --nitro: #ff73fa;
-  }
+:root {
+  --bg: #0a0a0c;
+  --surface: rgba(255, 255, 255, 0.04);
+  --border: rgba(255, 255, 255, 0.08);
+  --accent-1: #00ffcc;
+  --accent-2: #bf00ff;
+}
 
-- { margin: 0; padding: 0; box-sizing: border-box; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-font-family: ‘Noto Sans Thai’, sans-serif;
-background: var(–bg-tertiary);
-color: var(–text-normal);
-height: 100vh;
-overflow: hidden;
-display: flex;
-font-size: 15px;
+  min-height: 100vh;
+  background: var(--bg);
+  color: #fff;
+  font-family: 'DM Sans', sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 60px 20px 120px;
+  overflow-x: hidden;
 }
 
-/* ─── SERVER RAIL ─── */
-.server-rail {
-width: 72px;
-background: var(–bg-tertiary);
-display: flex;
-flex-direction: column;
-align-items: center;
-padding: 12px 0;
-gap: 8px;
-flex-shrink: 0;
-overflow-y: auto;
-scrollbar-width: none;
+/* bg blobs */
+.blob {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(90px);
+  pointer-events: none;
+  z-index: 0;
 }
-.server-rail::-webkit-scrollbar { display: none; }
+.blob-1 { width: 300px; height: 300px; background: rgba(191,0,255,.15); top: -50px; left: -50px; }
+.blob-2 { width: 400px; height: 400px; background: rgba(0,255,204,.1); bottom: -100px; right: -100px; }
 
-.server-icon {
-width: 48px;
-height: 48px;
-border-radius: 50%;
-background: var(–bg-secondary);
-display: flex;
-align-items: center;
-justify-content: center;
-cursor: pointer;
-transition: all 0.2s ease;
-position: relative;
-font-size: 20px;
-color: var(–text-normal);
-overflow: hidden;
-flex-shrink: 0;
-}
-.server-icon:hover { border-radius: 16px; }
-.server-icon.active {
-border-radius: 16px;
-background: var(–blurple);
-}
-.server-icon::before {
-content: ‘’;
-position: absolute;
-left: -4px;
-top: 50%;
-transform: translateY(-50%) scaleY(0);
-width: 4px;
-height: 8px;
-background: white;
-border-radius: 0 4px 4px 0;
-transition: all 0.2s ease;
-}
-.server-icon:hover::before { transform: translateY(-50%) scaleY(1); height: 20px; }
-.server-icon.active::before { transform: translateY(-50%) scaleY(1); height: 40px; }
-
-.server-divider {
-width: 32px;
-height: 2px;
-background: var(–separator);
-border-radius: 1px;
-flex-shrink: 0;
+.wrap {
+  position: relative; z-index: 1;
+  width: 100%; max-width: 480px;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 0;
 }
 
-.server-icon img { width: 100%; height: 100%; object-fit: cover; }
-
-/* ─── CHANNEL SIDEBAR ─── */
-.channel-sidebar {
-width: 240px;
-background: var(–bg-secondary);
-display: flex;
-flex-direction: column;
-flex-shrink: 0;
+/* ── Avatar ── */
+.avatar-ring {
+  width: 96px; height: 96px;
+  border-radius: 30%;
+  padding: 2px;
+  background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+  margin-bottom: 20px;
+  opacity: 0;
+  transform: rotate(10deg);
+  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
+.avatar-ring:hover { transform: rotate(0deg) scale(1.05); }
 
-.server-header {
-height: 48px;
-padding: 0 16px;
-display: flex;
-align-items: center;
-justify-content: space-between;
-border-bottom: 1px solid var(–bg-tertiary);
-cursor: pointer;
-transition: background 0.1s;
-font-weight: 600;
-font-size: 15px;
-color: var(–header-primary);
-flex-shrink: 0;
-}
-.server-header:hover { background: rgba(255,255,255,0.04); }
-
-.channel-list {
-flex: 1;
-overflow-y: auto;
-padding: 8px 8px;
-scrollbar-width: thin;
-scrollbar-color: var(–bg-tertiary) transparent;
-}
-.channel-list::-webkit-scrollbar { width: 4px; }
-.channel-list::-webkit-scrollbar-thumb { background: var(–bg-tertiary); border-radius: 4px; }
-
-.channel-category {
-padding: 16px 8px 4px;
-font-size: 11px;
-font-weight: 700;
-text-transform: uppercase;
-letter-spacing: 0.08em;
-color: var(–text-muted);
-display: flex;
-align-items: center;
-gap: 4px;
-cursor: pointer;
-user-select: none;
-}
-.channel-category:hover { color: var(–interactive-hover); }
-
-.channel-item {
-display: flex;
-align-items: center;
-gap: 8px;
-padding: 6px 8px;
-border-radius: 4px;
-cursor: pointer;
-color: var(–channel-default);
-transition: all 0.1s;
-font-size: 15px;
-font-weight: 500;
-}
-.channel-item:hover { background: rgba(255,255,255,0.06); color: var(–interactive-hover); }
-.channel-item.active { background: rgba(255,255,255,0.1); color: var(–channel-selected); }
-
-.channel-icon { font-size: 18px; width: 18px; text-align: center; flex-shrink: 0; }
-.channel-name { flex: 1; font-size: 15px; }
-
-.channel-badge {
-background: var(–red);
-color: white;
-font-size: 11px;
-font-weight: 700;
-padding: 2px 5px;
-border-radius: 8px;
-min-width: 16px;
-text-align: center;
+.avatar-inner {
+  width: 100%; height: 100%;
+  border-radius: 30%;
+  background: var(--bg);
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
 }
 
-/* ─── USER PANEL ─── */
-.user-panel {
-height: 52px;
-background: var(–bg-tertiary);
-display: flex;
-align-items: center;
-padding: 0 8px;
-gap: 8px;
-flex-shrink: 0;
+/* รูปโปรไฟล์ */
+.avatar-inner img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
-.user-avatar-wrap {
-position: relative;
-width: 32px;
-height: 32px;
-flex-shrink: 0;
+/* ── Profile Info ── */
+.profile-text { text-align: center; margin-bottom: 32px; }
+.name {
+  font-family: 'Syne', sans-serif;
+  font-size: 24px; font-weight: 800;
+  margin-bottom: 4px; opacity: 0;
 }
-.user-avatar-wrap img, .user-avatar-wrap .avatar-placeholder {
-width: 32px;
-height: 32px;
-border-radius: 50%;
-object-fit: cover;
-background: var(–blurple);
-display: flex;
-align-items: center;
-justify-content: center;
-font-size: 14px;
-font-weight: 700;
+.handle {
+  font-size: 15px; color: var(--accent-1);
+  font-weight: 500; margin-bottom: 12px; opacity: 0;
 }
-.status-dot {
-position: absolute;
-bottom: -2px;
-right: -2px;
-width: 12px;
-height: 12px;
-background: var(–green);
-border-radius: 50%;
-border: 2px solid var(–bg-tertiary);
+.bio {
+  font-size: 14px; color: rgba(255,255,255,.6);
+  font-weight: 300; line-height: 1.6;
+  opacity: 0;
 }
 
-.user-info { flex: 1; min-width: 0; }
-.user-name { font-size: 13px; font-weight: 600; color: var(–header-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.user-tag { font-size: 11px; color: var(–text-muted); }
-
-.panel-icons { display: flex; gap: 2px; }
-.panel-btn {
-width: 32px;
-height: 32px;
-border-radius: 4px;
-display: flex;
-align-items: center;
-justify-content: center;
-cursor: pointer;
-color: var(–channel-default);
-transition: all 0.1s;
-font-size: 18px;
-}
-.panel-btn:hover { background: rgba(255,255,255,0.08); color: var(–interactive-hover); }
-
-/* ─── MAIN CONTENT ─── */
-.main-content {
-flex: 1;
-display: flex;
-flex-direction: column;
-background: var(–bg-primary);
-overflow: hidden;
+/* ── Bento Grid Layout ── */
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  width: 100%;
 }
 
-/* Channel Header */
-.channel-header {
-height: 48px;
-border-bottom: 1px solid var(–bg-tertiary);
-display: flex;
-align-items: center;
-padding: 0 16px;
-gap: 12px;
-flex-shrink: 0;
-}
-.channel-header-icon { font-size: 22px; color: var(–text-muted); }
-.channel-header-name { font-weight: 700; font-size: 16px; color: var(–header-primary); }
-.channel-header-divider { width: 1px; height: 24px; background: var(–separator); }
-.channel-header-topic { font-size: 14px; color: var(–text-muted); flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
-/* Messages Area */
-.messages-area {
-flex: 1;
-overflow-y: auto;
-padding: 16px 0;
-scrollbar-width: thin;
-scrollbar-color: var(–bg-tertiary) transparent;
-}
-.messages-area::-webkit-scrollbar { width: 8px; }
-.messages-area::-webkit-scrollbar-thumb { background: var(–bg-tertiary); border-radius: 4px; }
-
-/* System Message */
-.system-msg {
-padding: 8px 72px;
-display: flex;
-align-items: center;
-gap: 12px;
-font-size: 14px;
-color: var(–text-muted);
-}
-.system-icon { font-size: 20px; }
-
-/* Message Group */
-.msg-group {
-padding: 2px 16px;
-display: flex;
-gap: 16px;
-position: relative;
-transition: background 0.05s;
-}
-.msg-group:hover { background: rgba(0,0,0,0.06); }
-
-.msg-avatar {
-width: 40px;
-height: 40px;
-border-radius: 50%;
-flex-shrink: 0;
-margin-top: 2px;
-cursor: pointer;
+.bento-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 20px;
+  text-decoration: none;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  opacity: 0;
+  transform: translateY(20px);
+  backdrop-filter: blur(12px);
 }
 
-.msg-body { flex: 1; min-width: 0; }
-.msg-header { display: flex; align-items: baseline; gap: 8px; margin-bottom: 4px; }
-.msg-author {
-font-weight: 600;
-font-size: 15px;
-cursor: pointer;
-}
-.msg-author:hover { text-decoration: underline; }
-.msg-timestamp { font-size: 11px; color: var(–text-muted); }
-.msg-content { font-size: 15px; line-height: 1.375; color: var(–text-normal); }
-.msg-content p { margin-bottom: 4px; }
-
-/* Continued message (no avatar) */
-.msg-continued {
-padding: 1px 16px 1px 72px;
-position: relative;
-transition: background 0.05s;
-}
-.msg-continued:hover { background: rgba(0,0,0,0.06); }
-.msg-continued:hover .msg-hover-time {
-opacity: 1;
-}
-.msg-hover-time {
-position: absolute;
-left: 16px;
-top: 50%;
-transform: translateY(-50%);
-font-size: 10px;
-color: var(–text-muted);
-opacity: 0;
-width: 44px;
-text-align: right;
-transition: opacity 0.1s;
-}
-.msg-continued-content { font-size: 15px; line-height: 1.375; color: var(–text-normal); }
-
-/* Embed */
-.embed {
-margin: 4px 0;
-border-left: 4px solid var(–blurple);
-background: rgba(0,0,0,0.2);
-border-radius: 0 4px 4px 0;
-padding: 10px 16px 12px;
-max-width: 520px;
-}
-.embed-author { font-size: 12px; font-weight: 600; color: var(–text-muted); margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
-.embed-title { font-size: 15px; font-weight: 700; color: var(–text-link); margin-bottom: 8px; }
-.embed-desc { font-size: 14px; line-height: 1.5; color: var(–text-normal); }
-.embed-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
-.embed-field { }
-.embed-field.full { grid-column: 1/-1; }
-.embed-field-name { font-size: 13px; font-weight: 700; color: var(–header-primary); margin-bottom: 3px; }
-.embed-field-value { font-size: 14px; color: var(–text-normal); line-height: 1.4; }
-.embed-footer { font-size: 12px; color: var(–text-muted); margin-top: 10px; display: flex; align-items: center; gap: 6px; }
-
-/* Embed Nitro */
-.embed.nitro { border-left-color: var(–nitro); }
-.embed.green { border-left-color: var(–green); }
-.embed.yellow { border-left-color: var(–yellow); }
-
-/* Badge */
-.badge {
-display: inline-flex;
-align-items: center;
-gap: 4px;
-padding: 2px 8px;
-border-radius: 12px;
-font-size: 12px;
-font-weight: 600;
-margin-right: 4px;
-}
-.badge-blurple { background: rgba(88,101,242,0.2); color: #a5adff; border: 1px solid rgba(88,101,242,0.4); }
-.badge-green { background: rgba(35,165,90,0.2); color: #57d98c; border: 1px solid rgba(35,165,90,0.4); }
-.badge-nitro { background: rgba(255,115,250,0.2); color: #ff73fa; border: 1px solid rgba(255,115,250,0.4); }
-.badge-yellow { background: rgba(240,178,50,0.2); color: #f0b232; border: 1px solid rgba(240,178,50,0.4); }
-
-/* Role color */
-.role-admin { color: #f23f42; }
-.role-dev { color: #57d98c; }
-.role-designer { color: #ff73fa; }
-
-/* Message Input */
-.msg-input-wrap {
-padding: 0 16px 24px;
-flex-shrink: 0;
-}
-.msg-input {
-background: rgba(0,0,0,0.2);
-border-radius: 8px;
-padding: 11px 16px;
-display: flex;
-align-items: center;
-gap: 12px;
-}
-.input-plus {
-width: 24px;
-height: 24px;
-background: var(–text-muted);
-border-radius: 50%;
-display: flex;
-align-items: center;
-justify-content: center;
-cursor: pointer;
-color: var(–bg-primary);
-font-size: 18px;
-font-weight: 700;
-line-height: 1;
-flex-shrink: 0;
-transition: background 0.1s;
-}
-.input-plus:hover { background: var(–interactive-hover); }
-.input-placeholder { flex: 1; color: var(–text-muted); font-size: 15px; }
-.input-icons { display: flex; gap: 6px; }
-.input-icon { font-size: 20px; cursor: pointer; color: var(–channel-default); transition: color 0.1s; }
-.input-icon:hover { color: var(–interactive-hover); }
-
-/* ─── RIGHT SIDEBAR (Member List) ─── */
-.member-sidebar {
-width: 240px;
-background: var(–bg-secondary);
-overflow-y: auto;
-padding: 16px 8px;
-flex-shrink: 0;
-scrollbar-width: thin;
-scrollbar-color: var(–bg-tertiary) transparent;
-}
-.member-sidebar::-webkit-scrollbar { width: 4px; }
-.member-sidebar::-webkit-scrollbar-thumb { background: var(–bg-tertiary); border-radius: 4px; }
-
-.member-category {
-font-size: 11px;
-font-weight: 700;
-text-transform: uppercase;
-letter-spacing: 0.08em;
-color: var(–text-muted);
-padding: 8px 8px 4px;
+.bento-item::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(800px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255,255,255,0.06), transparent 40%);
+  opacity: 0; transition: opacity 0.3s;
 }
 
-.member-item {
-display: flex;
-align-items: center;
-gap: 10px;
-padding: 6px 8px;
-border-radius: 4px;
-cursor: pointer;
-transition: background 0.1s;
+.bento-item:hover {
+  transform: translateY(-4px) scale(1.01);
+  border-color: rgba(255,255,255,0.2);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
 }
-.member-item:hover { background: rgba(255,255,255,0.06); }
+.bento-item:hover::before { opacity: 1; }
 
-.member-avatar-wrap { position: relative; width: 32px; height: 32px; flex-shrink: 0; }
-.member-avatar {
-width: 32px;
-height: 32px;
-border-radius: 50%;
-object-fit: cover;
-background: var(–blurple);
-display: flex;
-align-items: center;
-justify-content: center;
-font-size: 13px;
-font-weight: 700;
-color: white;
-}
-.member-status {
-position: absolute;
-bottom: -1px;
-right: -1px;
-width: 10px;
-height: 10px;
-border-radius: 50%;
-border: 2px solid var(–bg-secondary);
-}
-.s-online { background: var(–green); }
-.s-idle { background: var(–yellow); }
-.s-dnd { background: var(–red); }
-.s-offline { background: var(–text-muted); }
+.span-2 { grid-column: span 2; }
 
-.member-name { font-size: 15px; font-weight: 500; color: var(–channel-default); }
-.member-item:hover .member-name { color: var(–interactive-hover); }
+/* Detail Cards */
+.card-detail { justify-content: center; align-items: flex-start; }
+.card-detail i { font-size: 26px; margin-bottom: 12px; color: rgba(255,255,255,0.8); transition: 0.3s; }
+.card-detail h4 { font-size: 15px; font-weight: 500; margin-bottom: 4px; }
+.card-detail p { font-size: 12px; color: rgba(255,255,255,0.4); }
+.card-detail:hover i { color: #fff; transform: scale(1.1); }
 
-/* ─── PROFILE POPUP ─── */
-.profile-popup {
-position: fixed;
-top: 50%;
-left: 50%;
-transform: translate(-50%, -50%) scale(0.9);
-width: 340px;
-background: #232428;
-border-radius: 8px;
-box-shadow: 0 8px 32px rgba(0,0,0,0.6);
-z-index: 100;
-overflow: hidden;
-opacity: 0;
-pointer-events: none;
-transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+/* Horizontal Layout Cards */
+.card-horizontal {
+  flex-direction: row; align-items: center; justify-content: flex-start; gap: 16px; padding: 18px 24px;
 }
-.profile-popup.show {
-opacity: 1;
-pointer-events: all;
-transform: translate(-50%, -50%) scale(1);
-}
-.profile-banner {
-height: 100px;
-background: linear-gradient(135deg, #5865f2 0%, #a855f7 50%, #ec4899 100%);
-position: relative;
-}
-.profile-avatar-outer {
-position: absolute;
-bottom: -20px;
-left: 16px;
-width: 80px;
-height: 80px;
-border-radius: 50%;
-border: 6px solid #232428;
-background: var(–blurple);
-display: flex;
-align-items: center;
-justify-content: center;
-font-size: 32px;
-color: white;
-font-weight: 700;
-overflow: hidden;
-}
-.profile-status-ring {
-position: absolute;
-bottom: -20px;
-left: 80px;
-width: 22px;
-height: 22px;
-border-radius: 50%;
-border: 4px solid #232428;
-background: var(–green);
-}
-.profile-body { padding: 28px 16px 16px; }
-.profile-badges { display: flex; gap: 6px; margin-bottom: 10px; }
-.profile-badge { width: 22px; height: 22px; font-size: 18px; cursor: pointer; }
-.profile-username { font-size: 20px; font-weight: 800; color: var(–header-primary); }
-.profile-handle { font-size: 14px; color: var(–text-muted); margin-bottom: 10px; }
-.profile-divider { height: 1px; background: var(–separator); margin: 12px 0; }
-.profile-section-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(–text-muted); margin-bottom: 8px; }
-.profile-about { font-size: 14px; line-height: 1.5; color: var(–text-normal); }
-.profile-roles { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
-.profile-role {
-display: flex;
-align-items: center;
-gap: 5px;
-background: rgba(255,255,255,0.06);
-border-radius: 4px;
-padding: 3px 8px;
-font-size: 13px;
-color: var(–text-normal);
-}
-.role-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-.profile-note-input {
-width: 100%;
-background: var(–bg-tertiary);
-border: none;
-border-radius: 4px;
-padding: 8px;
-color: var(–text-normal);
-font-size: 14px;
-font-family: inherit;
-resize: none;
-outline: none;
-}
-.profile-actions { display: flex; gap: 8px; margin-top: 12px; }
-.profile-btn {
-flex: 1;
-padding: 8px;
-border-radius: 4px;
-border: none;
-cursor: pointer;
-font-size: 14px;
-font-weight: 600;
-transition: filter 0.1s;
-}
-.profile-btn:hover { filter: brightness(1.1); }
-.profile-btn.primary { background: var(–blurple); color: white; }
-.profile-btn.secondary { background: rgba(255,255,255,0.06); color: var(–text-normal); }
+.card-horizontal i { font-size: 28px; margin-bottom: 0; }
+.card-horizontal .text-content { text-align: left; }
 
-/* Overlay */
-.overlay {
-position: fixed;
-inset: 0;
-background: rgba(0,0,0,0.7);
-z-index: 99;
-opacity: 0;
-pointer-events: none;
-transition: opacity 0.2s;
-}
-.overlay.show { opacity: 1; pointer-events: all; }
+/* Custom Colors */
+.card-web:hover { border-color: #50c8ff; } .card-web:hover i { color: #50c8ff; }
+.card-gh:hover { border-color: #fff; }
+.card-li:hover { border-color: #0a66c2; } .card-li:hover i { color: #0a66c2; }
+.card-resume:hover { border-color: #ff50a0; } .card-resume:hover i { color: #ff50a0; }
+.card-yt:hover { border-color: #ff0000; } .card-yt:hover i { color: #ff0000; }
+.card-dev:hover { border-color: #ffb400; } .card-dev:hover i { color: #ffb400; }
 
-/* Mention */
-.mention {
-background: rgba(88,101,242,0.2);
-color: #c9cdfb;
-border-radius: 3px;
-padding: 0 2px;
-font-weight: 600;
-cursor: pointer;
+/* Socials Container */
+.card-socials-container {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px;
 }
-.mention:hover { background: var(–blurple); color: white; }
+.mini-socials {
+  display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; width: 100%;
+}
+.mini-socials a {
+  width: 44px; height: 44px; border-radius: 12px;
+  background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.05);
+  display: flex; align-items: center; justify-content: center;
+  color: rgba(255,255,255,0.6); font-size: 18px;
+  transition: all 0.3s; text-decoration: none;
+}
+.mini-socials a:hover { 
+  background: rgba(255,255,255,0.1); 
+  transform: translateY(-4px); 
+  border-color: rgba(255,255,255,0.2); 
+}
+.mini-socials a.fb:hover { color: #1877f2; border-color: #1877f2; }
+.mini-socials a.ig:hover { color: #e1306c; border-color: #e1306c; }
+.mini-socials a.tw:hover { color: #fff; }
+.mini-socials a.tt:hover { color: #69c9d0; border-color: #69c9d0; }
+.mini-socials a.dc:hover { color: #5865f2; border-color: #5865f2; }
+.mini-socials a.line:hover { color: #00b900; border-color: #00b900; }
 
-/* Code inline */
-code {
-background: rgba(0,0,0,0.3);
-border-radius: 3px;
-padding: 0 4px;
-font-family: ‘Space Mono’, monospace;
-font-size: 85%;
-color: #e3e5e8;
-}
+/* ── Footer ── */
+.footer-text { margin-top: 40px; font-size: 12px; color: rgba(255,255,255,.2); opacity: 0; }
 
-/* Reactions */
-.reactions { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
-.reaction {
-display: flex;
-align-items: center;
-gap: 5px;
-background: rgba(88,101,242,0.15);
-border: 1px solid rgba(88,101,242,0.3);
-border-radius: 8px;
-padding: 3px 8px;
-cursor: pointer;
-font-size: 14px;
-transition: all 0.1s;
+/* ── Image input ── */
+.img-input-wrap {
+  position: fixed; bottom: 24px; left: 50%;
+  transform: translateX(-50%);
+  z-index: 200;
+  display: flex; align-items: center; gap: 8px;
+  background: rgba(15,15,18,.85);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 100px;
+  padding: 8px 8px 8px 16px;
+  backdrop-filter: blur(12px);
+  width: min(420px, 90vw);
+  box-shadow: 0 10px 40px rgba(0,0,0,.6);
+  opacity: 0;
 }
-.reaction:hover { background: rgba(88,101,242,0.3); }
-.reaction-count { font-size: 13px; font-weight: 700; color: var(–blurple); }
-
-/* Skill bars */
-.skill-bar-wrap { margin: 4px 0; }
-.skill-bar-header { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 4px; }
-.skill-bar-track { height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden; }
-.skill-bar-fill { height: 100%; border-radius: 3px; background: var(–blurple); transition: width 1s ease; }
-
-/* Date separator */
-.date-sep {
-display: flex;
-align-items: center;
-gap: 12px;
-padding: 16px 16px 8px;
-color: var(–text-muted);
-font-size: 13px;
-font-weight: 600;
+.img-input-wrap input {
+  flex: 1; background: transparent; border: none; outline: none;
+  color: #fff; font-family: 'DM Sans', sans-serif;
+  font-size: 13px; min-width: 0;
 }
-.date-sep::before, .date-sep::after {
-content: ‘’;
-flex: 1;
-height: 1px;
-background: var(–separator);
+.img-input-wrap input::placeholder { color: rgba(255,255,255,.3); }
+.img-input-btn {
+  background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+  border: none; border-radius: 100px;
+  color: #000; font-size: 13px; font-weight: 700;
+  padding: 7px 16px; cursor: pointer;
+  white-space: nowrap; flex-shrink: 0;
+  transition: opacity .2s;
+  font-family: 'DM Sans', sans-serif;
 }
-
-/* Animations */
-@keyframes fadeSlideIn {
-from { opacity: 0; transform: translateY(8px); }
-to { opacity: 1; transform: translateY(0); }
+.img-input-btn:hover { opacity: .85; }
+.img-error {
+  font-size: 11px; color: #ff6b6b;
+  text-align: center; margin-top: 4px;
+  display: none;
+  position: absolute; bottom: -22px; left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
 }
-.msg-group, .msg-continued {
-animation: fadeSlideIn 0.3s ease forwards;
-}
-
-/* Typing indicator */
-.typing-indicator {
-padding: 0 16px 4px;
-font-size: 13px;
-color: var(–text-muted);
-display: flex;
-align-items: center;
-gap: 4px;
-height: 24px;
-}
-.typing-dots { display: flex; gap: 3px; align-items: center; }
-.typing-dot {
-width: 5px; height: 5px;
-background: var(–text-muted);
-border-radius: 50%;
-animation: typingBounce 1.4s infinite ease;
-}
-.typing-dot:nth-child(2) { animation-delay: 0.2s; }
-.typing-dot:nth-child(3) { animation-delay: 0.4s; }
-@keyframes typingBounce {
-0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
-30% { transform: translateY(-4px); opacity: 1; }
-}
-
-/* Online pulse */
-@keyframes pulse {
-0%, 100% { box-shadow: 0 0 0 0 rgba(35,165,90,0.4); }
-50% { box-shadow: 0 0 0 6px rgba(35,165,90,0); }
-}
-.status-dot { animation: pulse 2s infinite; }
-
-/* Nitro shimmer */
-@keyframes shimmer {
-0% { background-position: -200% center; }
-100% { background-position: 200% center; }
-}
-.nitro-text {
-background: linear-gradient(90deg, #ff73fa, #a855f7, #5865f2, #ff73fa);
-background-size: 200% auto;
--webkit-background-clip: text;
--webkit-text-fill-color: transparent;
-background-clip: text;
-animation: shimmer 3s linear infinite;
-font-weight: 700;
-}
-
-/* Blinking cursor */
-@keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
-.cursor { display: inline-block; width: 2px; height: 16px; background: var(–blurple); vertical-align: middle; animation: blink 1s infinite; margin-left: 1px; }
-
-/* Tooltip */
-.tooltip-wrap { position: relative; display: inline-flex; align-items: center; }
-.tooltip-wrap:hover .tooltip { opacity: 1; transform: translateY(-4px); pointer-events: none; }
-.tooltip {
-position: absolute;
-bottom: 100%;
-left: 50%;
-transform: translateX(-50%) translateY(0px);
-background: #111214;
-color: var(–header-primary);
-font-size: 13px;
-font-weight: 600;
-padding: 6px 10px;
-border-radius: 4px;
-white-space: nowrap;
-opacity: 0;
-pointer-events: none;
-transition: all 0.15s;
-margin-bottom: 6px;
-box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-}
-
-/* Scrollbar for main */
-::-webkit-scrollbar { width: 8px; height: 8px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(–bg-tertiary); border-radius: 4px; }
 </style>
-
 </head>
 <body>
 
-<!-- Server Rail -->
+<div class="blob blob-1"></div>
+<div class="blob blob-2"></div>
 
-<div class="server-rail">
-  <div class="server-icon active tooltip-wrap" style="background: linear-gradient(135deg, #5865f2, #a855f7);">
-    <span>👤</span>
-    <div class="tooltip">My Portfolio</div>
+<div class="wrap">
+
+  <!-- Avatar -->
+  <div class="avatar-ring" id="av">
+    <div class="avatar-inner" id="avatarInner">
+      <!-- 🟢 เปลี่ยนลิงก์รูปโปรไฟล์ตรง src ด้านล่างนี้ได้เลย 🟢 -->
+      <img id="profileImg" src="https://scontent.fbkk5-3.fna.fbcdn.net/v/t39.30808-6/503856767_4017693135043242_942713923231890650_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=a5f93a&_nc_ohc=NCc6OLDyD9QQ7kNvwGjm9yj&_nc_oc=AdrmGNp1dXhryqWQob-H-Tn8d9dq5eTikrd5b_g-czukytz9w_axO1rqGDCqkagZfiGiWpHLhLbfaYTmuh2n5Fz1&_nc_zt=23&_nc_ht=scontent.fbkk5-3.fna&_nc_gid=Fc2KBs5D0e0zA56L830ISA&_nc_ss=7b2a8&oh=00_Af68DIffU_iaqe9FkedaX6acv4XwEvcqLDXhMQ6NQKYGBw&oe=6A0E2FC3" alt="Profile" />
+    </div>
   </div>
-  <div class="server-divider"></div>
-  <div class="server-icon tooltip-wrap">
-    <span>💻</span>
-    <div class="tooltip">Projects</div>
+
+  <!-- Profile Info -->
+  <div class="profile-text">
+    <div class="name" id="name">Chedsada Pongam</div>
+    <div class="handle" id="handle">IG : nc.cmz</div>
+    <div class="bio" id="bio">
+      Full-Stack Developer<br/>
+      code · UI/UX · และกาแฟ ☕
+    </div>
   </div>
-  <div class="server-icon tooltip-wrap">
-    <span>🎮</span>
-    <div class="tooltip">Gaming</div>
+
+  <!-- Bento Grid -->
+  <div class="bento-grid" id="bento">
+    
+    <!-- Row 1: Web & GitHub -->
+    <a href="#" class="bento-item card-detail card-web">
+      <i class="fa-solid fa-globe"></i>
+      <h4>Portfolio Website</h4>
+      <p>skydev.dev</p>
+    </a>
+    <a href="#" class="bento-item card-detail card-gh">
+      <i class="fa-brands fa-github"></i>
+      <h4>GitHub</h4>
+      <p>230+ stars</p>
+    </a>
+
+    <!-- Row 2: LinkedIn & Resume -->
+    <a href="#" class="bento-item card-detail card-li">
+      <i class="fa-brands fa-linkedin-in"></i>
+      <h4>LinkedIn</h4>
+      <p>Connect with me</p>
+    </a>
+    <a href="#" class="bento-item card-detail card-resume">
+      <i class="fa-solid fa-file-pdf"></i>
+      <h4>Resume PDF</h4>
+      <p>อัปเดตล่าสุด Jan 2026</p>
+    </a>
+
+    <!-- Row 3: Content (YouTube & Dev.to) -->
+    <a href="#" class="bento-item span-2 card-detail card-horizontal card-yt">
+      <i class="fa-brands fa-youtube"></i>
+      <div class="text-content">
+        <h4>YouTube Channel</h4>
+        <p>Tutorial สอน coding ฟรี</p>
+      </div>
+    </a>
+    <a href="#" class="bento-item span-2 card-detail card-horizontal card-dev">
+      <i class="fa-brands fa-dev"></i>
+      <div class="text-content">
+        <h4>Blog · dev.to</h4>
+        <p>เขียนเรื่อง web dev ภาษาไทย</p>
+      </div>
+    </a>
+
+    <!-- Row 4: All Social Icons -->
+    <div class="bento-item span-2 card-socials-container">
+      <p style="font-size: 11px; color: rgba(255,255,255,0.3); margin-bottom: 14px; text-transform: uppercase; letter-spacing: 2px; font-weight: 700;">Let's Connect</p>
+      <div class="mini-socials">
+        <a href="#" class="fb" title="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+        <a href="#" class="ig" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
+        <a href="#" class="tw" title="X (Twitter)"><i class="fa-brands fa-x-twitter"></i></a>
+        <a href="#" class="tt" title="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+        <a href="#" class="dc" title="Discord"><i class="fa-brands fa-discord"></i></a>
+        <a href="#" class="line" title="Line"><i class="fa-brands fa-line"></i></a>
+      </div>
+    </div>
+    
+    <!-- Row 5: Email -->
+    <a href="mailto:skydev@example.com" class="bento-item span-2 card-detail card-horizontal" style="justify-content: space-between; border-color: rgba(0,255,204,0.3);">
+      <div class="text-content">
+        <h4>Contact via Email</h4>
+        <p style="margin-top:2px;">skydev@example.com</p>
+      </div>
+      <i class="fa-solid fa-paper-plane" style="margin:0; color:var(--accent-1);"></i>
+    </a>
+
   </div>
-  <div class="server-icon tooltip-wrap">
-    <span>🎵</span>
-    <div class="tooltip">Music</div>
-  </div>
-  <div class="server-icon tooltip-wrap">
-    <span>📚</span>
-    <div class="tooltip">Learning</div>
-  </div>
-  <div class="server-divider"></div>
-  <div class="server-icon tooltip-wrap" style="font-size:28px; color: var(--text-muted)">
-    +
-    <div class="tooltip">เพิ่ม Server</div>
-  </div>
+
+  <div class="footer-text" id="footer">ระยอง · Thailand 🇹🇭 · © 2026</div>
 </div>
 
-<!-- Channel Sidebar -->
-
-<div class="channel-sidebar">
-  <div class="server-header">
-    <span>👤 My Portfolio</span>
-    <span>✕</span>
-  </div>
-
-  <div class="channel-list">
-    <div class="channel-category">▾ ข้อมูลทั่วไป</div>
-    <div class="channel-item active" onclick="switchChannel(this,'about-me','# about-me','เรียนรู้เพิ่มเติมเกี่ยวกับเจ้าของ server นี้')">
-      <span class="channel-icon">#</span>
-      <span class="channel-name">about-me</span>
-    </div>
-    <div class="channel-item" onclick="switchChannel(this,'announcements','📢 announcements','ประกาศและข่าวสารล่าสุด')">
-      <span class="channel-icon">📢</span>
-      <span class="channel-name">announcements</span>
-      <span class="channel-badge">1</span>
-    </div>
-
-```
-<div class="channel-category">▾ ผลงาน</div>
-<div class="channel-item" onclick="switchChannel(this,'skills','# skills','ทักษะและความสามารถ')">
-  <span class="channel-icon">#</span>
-  <span class="channel-name">skills</span>
-</div>
-<div class="channel-item" onclick="switchChannel(this,'projects','# projects','โปรเจกต์ที่ทำ')">
-  <span class="channel-icon">#</span>
-  <span class="channel-name">projects</span>
-</div>
-<div class="channel-item" onclick="switchChannel(this,'experience','# experience','ประสบการณ์การทำงาน')">
-  <span class="channel-icon">#</span>
-  <span class="channel-name">experience</span>
-</div>
-
-<div class="channel-category">▾ ติดต่อ</div>
-<div class="channel-item" onclick="switchChannel(this,'contact','✉️ contact','ช่องทางการติดต่อ')">
-  <span class="channel-icon">✉️</span>
-  <span class="channel-name">contact</span>
-</div>
-<div class="channel-item" onclick="switchChannel(this,'social-media','🌐 social-media','Social Media ทั้งหมด')">
-  <span class="channel-icon">🌐</span>
-  <span class="channel-name">social-media</span>
-</div>
-
-<div class="channel-category">▾ Voice Channels</div>
-<div class="channel-item">
-  <span class="channel-icon">🔊</span>
-  <span class="channel-name">General VC</span>
-</div>
-<div class="channel-item">
-  <span class="channel-icon">🔊</span>
-  <span class="channel-name">Chill Zone</span>
-</div>
-```
-
-  </div>
-
-  <!-- User Panel -->
-
-  <div class="user-panel">
-    <div class="user-avatar-wrap" onclick="showProfile()" style="cursor:pointer;">
-      <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#5865f2,#a855f7);display:flex;align-items:center;justify-content:center;font-weight:700;color:white;font-size:14px;">K</div>
-      <div class="status-dot"></div>
-    </div>
-    <div class="user-info">
-      <div class="user-name">KhunDev</div>
-      <div class="user-tag">#2024</div>
-    </div>
-    <div class="panel-icons">
-      <div class="panel-btn">🎤</div>
-      <div class="panel-btn">🎧</div>
-      <div class="panel-btn">⚙️</div>
-    </div>
-  </div>
-</div>
-
-<!-- Main Content -->
-
-<div class="main-content">
-  <div class="channel-header">
-    <span class="channel-header-icon">#</span>
-    <span class="channel-header-name" id="ch-name">about-me</span>
-    <div class="channel-header-divider"></div>
-    <span class="channel-header-topic" id="ch-topic">เรียนรู้เพิ่มเติมเกี่ยวกับเจ้าของ server นี้</span>
-    <div style="display:flex;gap:8px;margin-left:auto;color:var(--text-muted);font-size:20px;cursor:pointer;">
-      <span>🔔</span>
-      <span>📌</span>
-      <span>👥</span>
-      <span>🔍</span>
-    </div>
-  </div>
-
-  <div class="messages-area" id="messages-area">
-
-```
-<!-- ABOUT ME content -->
-<div id="ch-about-me">
-  <div class="date-sep">วันแรกของ Server — 1 มกราคม 2024</div>
-
-  <div class="system-msg">
-    <span class="system-icon">👋</span>
-    <span>ยินดีต้อนรับสู่ <strong>#about-me</strong> เริ่มต้นการผจญภัยใน server นี้ได้เลย!</span>
-  </div>
-
-  <div style="height:12px;"></div>
-
-  <div class="msg-group" onclick="showProfile()">
-    <img class="msg-avatar" src="https://api.dicebear.com/9.x/bottts/svg?seed=khundev&backgroundColor=5865f2" alt="avatar" style="cursor:pointer;">
-    <div class="msg-body">
-      <div class="msg-header">
-        <span class="msg-author role-admin">KhunDev</span>
-        <span style="font-size:12px;" class="badge badge-blurple">🛡️ Admin</span>
-        <span style="font-size:12px;" class="badge badge-nitro">✨ Nitro</span>
-        <span class="msg-timestamp">วันนี้ เวลา 09:00</span>
-      </div>
-      <div class="msg-content">
-        <p>สวัสดีทุกคน! ผมชื่อ <strong>คุณ Dev</strong> 👋</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="msg-continued">
-    <div class="msg-hover-time">09:01</div>
-    <div class="msg-continued-content">
-      ผมเป็น <strong>Full Stack Developer</strong> ที่หลงใหลการสร้างสิ่งใหม่ๆ ด้วย Code 💻<br>
-      ปัจจุบันทำงานอยู่ที่กรุงเทพฯ และมีประสบการณ์มากกว่า <strong>3 ปี</strong> ในวงการ Web Development
-    </div>
-  </div>
-
-  <div class="msg-continued">
-    <div class="msg-hover-time">09:01</div>
-    <div class="msg-continued-content">
-      <div class="embed">
-        <div class="embed-author">👤 About Me</div>
-        <div class="embed-title">Profile Overview</div>
-        <div class="embed-desc">นักพัฒนา Web ผู้ชื่นชอบการเรียนรู้เทคโนโลยีใหม่ๆ และการแก้ปัญหาที่ซับซ้อน ด้วย Code ที่สะอาดและมีประสิทธิภาพ</div>
-        <div class="embed-fields">
-          <div class="embed-field">
-            <div class="embed-field-name">🎂 อายุ</div>
-            <div class="embed-field-value">25 ปี</div>
-          </div>
-          <div class="embed-field">
-            <div class="embed-field-name">📍 ที่อยู่</div>
-            <div class="embed-field-value">กรุงเทพมหานคร, TH</div>
-          </div>
-          <div class="embed-field">
-            <div class="embed-field-name">💼 ตำแหน่ง</div>
-            <div class="embed-field-value">Full Stack Developer</div>
-          </div>
-          <div class="embed-field">
-            <div class="embed-field-name">🎓 การศึกษา</div>
-            <div class="embed-field-value">วิทยาศาสตร์คอมพิวเตอร์</div>
-          </div>
-          <div class="embed-field full">
-            <div class="embed-field-name">🌟 ความสนใจ</div>
-            <div class="embed-field-value">Web Dev · Open Source · AI/ML · Game Dev · Coffee ☕</div>
-          </div>
-        </div>
-        <div class="embed-footer">🟢 Online · เข้าร่วมเมื่อ มกราคม 2024</div>
-      </div>
-      <div class="reactions">
-        <div class="reaction"><span>👋</span><span class="reaction-count">42</span></div>
-        <div class="reaction"><span>💙</span><span class="reaction-count">28</span></div>
-        <div class="reaction"><span>🔥</span><span class="reaction-count">15</span></div>
-      </div>
-    </div>
-  </div>
-
-  <div style="height:12px;"></div>
-  <div class="date-sep">วันนี้</div>
-
-  <div class="msg-group">
-    <img class="msg-avatar" src="https://api.dicebear.com/9.x/bottts/svg?seed=bot123&backgroundColor=23a55a" alt="bot">
-    <div class="msg-body">
-      <div class="msg-header">
-        <span class="msg-author" style="color: var(--green);">Portfolio Bot</span>
-        <span style="font-size:12px;background:rgba(35,165,90,0.2);color:#57d98c;border:1px solid rgba(35,165,90,0.4);padding:2px 6px;border-radius:4px;font-weight:700;font-size:11px;">BOT</span>
-        <span class="msg-timestamp">วันนี้ เวลา 10:00</span>
-      </div>
-      <div class="msg-content">
-        <p>🎉 <span class="mention">@everyone</span> ยินดีต้อนรับสู่ Portfolio Server ของ <span class="mention">@KhunDev</span>!</p>
-        <p>กรุณาดูแต่ละ channel เพื่อเรียนรู้เพิ่มเติม ✨</p>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- SKILLS content -->
-<div id="ch-skills" style="display:none;">
-  <div class="date-sep">ทักษะและความสามารถ</div>
-  <div class="msg-group" onclick="showProfile()">
-    <img class="msg-avatar" src="https://api.dicebear.com/9.x/bottts/svg?seed=khundev&backgroundColor=5865f2" alt="avatar">
-    <div class="msg-body">
-      <div class="msg-header">
-        <span class="msg-author role-admin">KhunDev</span>
-        <span class="msg-timestamp">วันนี้ เวลา 11:00</span>
-      </div>
-      <div class="msg-content">
-        <p>นี่คือ Tech Stack ที่ผมถนัด! 🛠️</p>
-        <div class="embed">
-          <div class="embed-author">⚡ Tech Stack</div>
-          <div class="embed-title">Frontend</div>
-          <div class="embed-desc">
-            <div class="skill-bar-wrap">
-              <div class="skill-bar-header"><span>React / Next.js</span><span>95%</span></div>
-              <div class="skill-bar-track"><div class="skill-bar-fill" style="width:95%"></div></div>
-            </div>
-            <div class="skill-bar-wrap">
-              <div class="skill-bar-header"><span>TypeScript</span><span>90%</span></div>
-              <div class="skill-bar-track"><div class="skill-bar-fill" style="width:90%;background:#3178c6"></div></div>
-            </div>
-            <div class="skill-bar-wrap">
-              <div class="skill-bar-header"><span>Tailwind CSS</span><span>92%</span></div>
-              <div class="skill-bar-track"><div class="skill-bar-fill" style="width:92%;background:#06b6d4"></div></div>
-            </div>
-          </div>
-          <div class="embed-footer">⚛️ Frontend Mastery</div>
-        </div>
-
-        <div class="embed green" style="margin-top:8px;">
-          <div class="embed-author">🗄️ Backend</div>
-          <div class="embed-title">Server Side</div>
-          <div class="embed-desc">
-            <div class="skill-bar-wrap">
-              <div class="skill-bar-header"><span>Node.js / Express</span><span>88%</span></div>
-              <div class="skill-bar-track"><div class="skill-bar-fill" style="width:88%;background:#23a55a"></div></div>
-            </div>
-            <div class="skill-bar-wrap">
-              <div class="skill-bar-header"><span>Python / FastAPI</span><span>82%</span></div>
-              <div class="skill-bar-track"><div class="skill-bar-fill" style="width:82%;background:#3776ab"></div></div>
-            </div>
-            <div class="skill-bar-wrap">
-              <div class="skill-bar-header"><span>PostgreSQL / MongoDB</span><span>85%</span></div>
-              <div class="skill-bar-track"><div class="skill-bar-fill" style="width:85%;background:#336791"></div></div>
-            </div>
-          </div>
-          <div class="embed-footer">🌿 Backend Beast</div>
-        </div>
-
-        <div class="embed yellow" style="margin-top:8px;">
-          <div class="embed-author">🔧 Tools & Others</div>
-          <div class="embed-title">DevOps & Tools</div>
-          <div class="embed-fields">
-            <div class="embed-field"><div class="embed-field-name">☁️ Cloud</div><div class="embed-field-value">AWS · GCP · Vercel</div></div>
-            <div class="embed-field"><div class="embed-field-name">🐳 Container</div><div class="embed-field-value">Docker · Kubernetes</div></div>
-            <div class="embed-field"><div class="embed-field-name">🔄 CI/CD</div><div class="embed-field-value">GitHub Actions · Jenkins</div></div>
-            <div class="embed-field"><div class="embed-field-name">🎨 Design</div><div class="embed-field-value">Figma · Adobe XD</div></div>
-          </div>
-        </div>
-
-        <div class="reactions" style="margin-top:8px;">
-          <div class="reaction"><span>⚡</span><span class="reaction-count">33</span></div>
-          <div class="reaction"><span>🚀</span><span class="reaction-count">21</span></div>
-          <div class="reaction"><span>💯</span><span class="reaction-count">18</span></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- PROJECTS content -->
-<div id="ch-projects" style="display:none;">
-  <div class="date-sep">โปรเจกต์ที่ภาคภูมิใจ</div>
-  <div class="msg-group" onclick="showProfile()">
-    <img class="msg-avatar" src="https://api.dicebear.com/9.x/bottts/svg?seed=khundev&backgroundColor=5865f2" alt="avatar">
-    <div class="msg-body">
-      <div class="msg-header">
-        <span class="msg-author role-admin">KhunDev</span>
-        <span class="msg-timestamp">วันนี้ เวลา 14:00</span>
-      </div>
-      <div class="msg-content">
-        <p>นี่คือโปรเจกต์ที่ผมภาคภูมิใจมากที่สุด! 🚀</p>
-      </div>
-    </div>
-  </div>
-  <div class="msg-continued">
-    <div class="msg-continued-content">
-      <div class="embed">
-        <div class="embed-author">🏆 Featured Project #1</div>
-        <div class="embed-title">🛒 E-Commerce Platform</div>
-        <div class="embed-desc">ระบบ E-Commerce ครบวงจรที่สามารถรองรับผู้ใช้งานพร้อมกันได้มากกว่า 10,000 คน รองรับการชำระเงินออนไลน์ผ่าน 5 ช่องทาง มีระบบ Real-time inventory และ Analytics Dashboard</div>
-        <div class="embed-fields">
-          <div class="embed-field"><div class="embed-field-name">🛠️ Stack</div><div class="embed-field-value">Next.js · Node.js · PostgreSQL · Redis</div></div>
-          <div class="embed-field"><div class="embed-field-name">📊 Stats</div><div class="embed-field-value">10K+ Users · 99.9% Uptime</div></div>
-        </div>
-        <div class="embed-footer">⭐ 234 GitHub Stars · MIT License</div>
-      </div>
-      <div class="embed green" style="margin-top:8px;">
-        <div class="embed-author">🏆 Featured Project #2</div>
-        <div class="embed-title">🤖 AI Chat Assistant</div>
-        <div class="embed-desc">แอป Chat Bot ที่ใช้ AI ตอบคำถามอัตโนมัติ รองรับภาษาไทยและอังกฤษ มี sentiment analysis และ context-aware responses พร้อม integration กับ LINE และ Discord</div>
-        <div class="embed-fields">
-          <div class="embed-field"><div class="embed-field-name">🛠️ Stack</div><div class="embed-field-value">Python · FastAPI · OpenAI API · React</div></div>
-          <div class="embed-field"><div class="embed-field-name">📊 Stats</div><div class="embed-field-value">50K+ Messages/day</div></div>
-        </div>
-        <div class="embed-footer">⭐ 156 GitHub Stars · Apache License</div>
-      </div>
-      <div class="embed nitro" style="margin-top:8px;">
-        <div class="embed-author">🏆 Featured Project #3</div>
-        <div class="embed-title">📊 Real-time Dashboard</div>
-        <div class="embed-desc">Dashboard แสดงข้อมูล Real-time สำหรับ IoT Devices กว่า 1,000 ตัว มีระบบ Alert, Predictive Maintenance และ Data Visualization ด้วย WebSocket</div>
-        <div class="embed-fields">
-          <div class="embed-field"><div class="embed-field-name">🛠️ Stack</div><div class="embed-field-value">React · D3.js · WebSocket · InfluxDB</div></div>
-          <div class="embed-field"><div class="embed-field-name">📊 Stats</div><div class="embed-field-value">1000+ Devices Monitored</div></div>
-        </div>
-        <div class="embed-footer">⭐ 89 GitHub Stars · Private</div>
-      </div>
-      <div class="reactions" style="margin-top:8px;">
-        <div class="reaction"><span>🔥</span><span class="reaction-count">67</span></div>
-        <div class="reaction"><span>👏</span><span class="reaction-count">44</span></div>
-        <div class="reaction"><span>💪</span><span class="reaction-count">29</span></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- EXPERIENCE -->
-<div id="ch-experience" style="display:none;">
-  <div class="date-sep">ประสบการณ์การทำงาน</div>
-  <div class="msg-group" onclick="showProfile()">
-    <img class="msg-avatar" src="https://api.dicebear.com/9.x/bottts/svg?seed=khundev&backgroundColor=5865f2" alt="avatar">
-    <div class="msg-body">
-      <div class="msg-header">
-        <span class="msg-author role-admin">KhunDev</span>
-        <span class="msg-timestamp">วันนี้ เวลา 08:00</span>
-      </div>
-      <div class="msg-content">
-        <p>Journey ของผมในวงการ Tech 🗺️</p>
-        <div class="embed">
-          <div class="embed-author">💼 Current</div>
-          <div class="embed-title">Senior Full Stack Developer @ TechCorp Thailand</div>
-          <div class="embed-desc">นำทีม 5 คนในการพัฒนา SaaS Platform สำหรับลูกค้าองค์กร ออกแบบและ implement microservices architecture รองรับ 1M+ users</div>
-          <div class="embed-footer">📅 2022 — ปัจจุบัน · กรุงเทพฯ</div>
-        </div>
-        <div class="embed green" style="margin-top:8px;">
-          <div class="embed-author">💼 Previous</div>
-          <div class="embed-title">Full Stack Developer @ StartupXYZ</div>
-          <div class="embed-desc">พัฒนา MVP ตั้งแต่ 0 จนถึง Product-Market Fit ดูแล codebase ทั้งหมด ทำงานใกล้ชิดกับ Designer และ Product Manager</div>
-          <div class="embed-footer">📅 2021 — 2022 · กรุงเทพฯ</div>
-        </div>
-        <div class="embed yellow" style="margin-top:8px;">
-          <div class="embed-author">🎓 Education</div>
-          <div class="embed-title">ปริญญาตรี วิทยาศาสตร์คอมพิวเตอร์</div>
-          <div class="embed-desc">มหาวิทยาลัยชื่อดัง กรุงเทพฯ<br>เกียรตินิยมอันดับ 1 · GPA 3.87</div>
-          <div class="embed-footer">📅 2017 — 2021</div>
-        </div>
-        <div class="reactions" style="margin-top:8px;">
-          <div class="reaction"><span>🎖️</span><span class="reaction-count">52</span></div>
-          <div class="reaction"><span>🌟</span><span class="reaction-count">38</span></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- CONTACT -->
-<div id="ch-contact" style="display:none;">
-  <div class="date-sep">ช่องทางการติดต่อ</div>
-  <div class="msg-group">
-    <img class="msg-avatar" src="https://api.dicebear.com/9.x/bottts/svg?seed=bot123&backgroundColor=23a55a" alt="bot">
-    <div class="msg-body">
-      <div class="msg-header">
-        <span class="msg-author" style="color: var(--green);">Contact Bot</span>
-        <span style="font-size:11px;background:rgba(35,165,90,0.2);color:#57d98c;border:1px solid rgba(35,165,90,0.4);padding:2px 6px;border-radius:4px;font-weight:700;">BOT</span>
-        <span class="msg-timestamp">วันนี้ เวลา 12:00</span>
-      </div>
-      <div class="msg-content">
-        <p>ต้องการติดต่อ <span class="mention">@KhunDev</span>? ใช้ช่องทางด้านล่างนี้ได้เลย! 📬</p>
-        <div class="embed">
-          <div class="embed-title">📬 ช่องทางการติดต่อ</div>
-          <div class="embed-fields">
-            <div class="embed-field"><div class="embed-field-name">📧 Email</div><div class="embed-field-value"><a href="mailto:khundev@example.com" style="color:var(--text-link);">khundev@example.com</a></div></div>
-            <div class="embed-field"><div class="embed-field-name">💼 LinkedIn</div><div class="embed-field-value"><a href="#" style="color:var(--text-link);">linkedin.com/in/khundev</a></div></div>
-            <div class="embed-field"><div class="embed-field-name">🐙 GitHub</div><div class="embed-field-value"><a href="#" style="color:var(--text-link);">github.com/khundev</a></div></div>
-            <div class="embed-field"><div class="embed-field-name">🐦 Twitter/X</div><div class="embed-field-value"><a href="#" style="color:var(--text-link);">@khundev</a></div></div>
-          </div>
-          <div class="embed-footer">⏱️ ตอบกลับภายใน 24 ชั่วโมง</div>
-        </div>
-        <div class="reactions" style="margin-top:8px;">
-          <div class="reaction"><span>📨</span><span class="reaction-count">12</span></div>
-          <div class="reaction"><span>👍</span><span class="reaction-count">9</span></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- SOCIAL MEDIA -->
-<div id="ch-social-media" style="display:none;">
-  <div class="date-sep">Social Media</div>
-  <div class="msg-group">
-    <img class="msg-avatar" src="https://api.dicebear.com/9.x/bottts/svg?seed=khundev&backgroundColor=5865f2" alt="avatar">
-    <div class="msg-body">
-      <div class="msg-header">
-        <span class="msg-author role-admin">KhunDev</span>
-        <span class="msg-timestamp">วันนี้ เวลา 15:00</span>
-      </div>
-      <div class="msg-content">
-        <p>ติดตามผมได้ที่ทุก Platform นะ! 🌐</p>
-        <div class="embed nitro">
-          <div class="embed-title"><span class="nitro-text">✨ Social Links</span></div>
-          <div class="embed-fields">
-            <div class="embed-field"><div class="embed-field-name">🎮 Discord</div><div class="embed-field-value">KhunDev#2024</div></div>
-            <div class="embed-field"><div class="embed-field-name">📸 Instagram</div><div class="embed-field-value">@khundev.code</div></div>
-            <div class="embed-field"><div class="embed-field-name">▶️ YouTube</div><div class="embed-field-value">KhunDev Coding</div></div>
-            <div class="embed-field"><div class="embed-field-name">📝 Blog</div><div class="embed-field-value">blog.khundev.dev</div></div>
-            <div class="embed-field full"><div class="embed-field-name">🏆 Certifications</div><div class="embed-field-value">AWS Solutions Architect · Google Cloud Professional · Meta React Developer</div></div>
-          </div>
-        </div>
-        <div class="reactions" style="margin-top:8px;">
-          <div class="reaction"><span>🌟</span><span class="reaction-count">41</span></div>
-          <div class="reaction"><span>🤝</span><span class="reaction-count">27</span></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ANNOUNCEMENTS -->
-<div id="ch-announcements" style="display:none;">
-  <div class="date-sep">ประกาศล่าสุด</div>
-  <div class="msg-group">
-    <img class="msg-avatar" src="https://api.dicebear.com/9.x/bottts/svg?seed=bot123&backgroundColor=23a55a" alt="bot">
-    <div class="msg-body">
-      <div class="msg-header">
-        <span class="msg-author" style="color: var(--green);">Portfolio Bot</span>
-        <span style="font-size:11px;background:rgba(35,165,90,0.2);color:#57d98c;border:1px solid rgba(35,165,90,0.4);padding:2px 6px;border-radius:4px;font-weight:700;">BOT</span>
-        <span class="msg-timestamp">วันนี้ เวลา 09:30</span>
-      </div>
-      <div class="msg-content">
-        <div class="embed">
-          <div class="embed-title">🎉 ข่าวดี! เปิดรับงาน Freelance แล้ว!</div>
-          <div class="embed-desc">สนใจจ้างงาน Web Development, Mobile App หรือ System Design? พร้อมรับงานแล้วตั้งแต่วันนี้! ส่ง DM มาได้เลย หรือ email ที่ khundev@example.com</div>
-          <div class="embed-footer">📢 Announcement · ล่าสุด</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-```
-
-  </div>
-
-  <!-- Typing Indicator -->
-
-  <div class="typing-indicator" id="typing-indicator" style="display:none;">
-    <div class="typing-dots">
-      <div class="typing-dot"></div>
-      <div class="typing-dot"></div>
-      <div class="typing-dot"></div>
-    </div>
-    <span style="margin-left:4px;"><strong>KhunDev</strong> กำลังพิมพ์...</span>
-  </div>
-
-  <!-- Message Input -->
-
-  <div class="msg-input-wrap">
-    <div class="msg-input">
-      <div class="input-plus">+</div>
-      <div class="input-placeholder" id="input-placeholder">ส่งข้อความถึง #about-me</div>
-      <div class="input-icons">
-        <span class="input-icon">🎁</span>
-        <span class="input-icon">🖼️</span>
-        <span class="input-icon">😊</span>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Member List (Right Sidebar) -->
-
-<div class="member-sidebar">
-  <div class="member-category">Admin — 1</div>
-  <div class="member-item" onclick="showProfile()">
-    <div class="member-avatar-wrap">
-      <img class="member-avatar" src="https://api.dicebear.com/9.x/bottts/svg?seed=khundev&backgroundColor=5865f2" alt="">
-      <div class="member-status s-online"></div>
-    </div>
-    <div>
-      <div class="member-name" style="color:#f23f42;">KhunDev</div>
-      <div style="font-size:12px;color:var(--text-muted);">กำลัง Code อยู่ 💻</div>
-    </div>
-  </div>
-
-  <div class="member-category" style="margin-top:16px;">Bots — 1</div>
-  <div class="member-item">
-    <div class="member-avatar-wrap">
-      <img class="member-avatar" src="https://api.dicebear.com/9.x/bottts/svg?seed=bot123&backgroundColor=23a55a" alt="">
-      <div class="member-status s-online"></div>
-    </div>
-    <div>
-      <div class="member-name" style="color:var(--green);">Portfolio Bot</div>
-      <div style="font-size:12px;color:var(--text-muted);">Online</div>
-    </div>
-  </div>
-
-  <div class="member-category" style="margin-top:16px;">Visitors — 3</div>
-  <div class="member-item">
-    <div class="member-avatar-wrap">
-      <div class="member-avatar" style="background:#e84393;font-size:12px;">R</div>
-      <div class="member-status s-online"></div>
-    </div>
-    <div><div class="member-name">Recruiter_TH</div></div>
-  </div>
-  <div class="member-item">
-    <div class="member-avatar-wrap">
-      <div class="member-avatar" style="background:#f0b232;font-size:12px;">D</div>
-      <div class="member-status s-idle"></div>
-    </div>
-    <div><div class="member-name">DevFriend</div></div>
-  </div>
-  <div class="member-item">
-    <div class="member-avatar-wrap">
-      <div class="member-avatar" style="background:#a855f7;font-size:12px;">A</div>
-      <div class="member-status s-dnd"></div>
-    </div>
-    <div><div class="member-name">AwesomeUser</div></div>
-  </div>
-</div>
-
-<!-- Profile Popup -->
-
-<div class="overlay" id="overlay" onclick="hideProfile()"></div>
-<div class="profile-popup" id="profile-popup">
-  <div class="profile-banner"></div>
-  <div class="profile-avatar-outer">
-    <img src="https://api.dicebear.com/9.x/bottts/svg?seed=khundev&backgroundColor=5865f2" alt="" style="width:100%;height:100%;border-radius:50%;">
-  </div>
-  <div class="profile-status-ring"></div>
-  <div class="profile-body">
-    <div class="profile-badges">
-      <span class="profile-badge tooltip-wrap">🛡️<div class="tooltip">Server Booster</div></span>
-      <span class="profile-badge tooltip-wrap">✨<div class="tooltip">Nitro Subscriber</div></span>
-      <span class="profile-badge tooltip-wrap">👨‍💻<div class="tooltip">Developer</div></span>
-      <span class="profile-badge tooltip-wrap">🏅<div class="tooltip">Early Supporter</div></span>
-    </div>
-    <div class="profile-username">KhunDev</div>
-    <div class="profile-handle">khundev • #2024</div>
-    <div class="profile-divider"></div>
-    <div class="profile-section-title">เกี่ยวกับฉัน</div>
-    <div class="profile-about">
-      Full Stack Developer 💻<br>
-      กรุงเทพมหานคร, Thailand 🇹🇭<br>
-      <span class="nitro-text">Nitro since 2022 ✨</span>
-    </div>
-    <div class="profile-divider"></div>
-    <div class="profile-section-title">Member since</div>
-    <div class="profile-about">มกราคม 1, 2024</div>
-    <div class="profile-divider"></div>
-    <div class="profile-section-title">Roles</div>
-    <div class="profile-roles">
-      <div class="profile-role"><div class="role-dot" style="background:#f23f42;"></div>Admin</div>
-      <div class="profile-role"><div class="role-dot" style="background:#57d98c;"></div>Developer</div>
-      <div class="profile-role"><div class="role-dot" style="background:#ff73fa;"></div>Designer</div>
-      <div class="profile-role"><div class="role-dot" style="background:#5865f2;"></div>Nitro</div>
-    </div>
-    <div class="profile-divider"></div>
-    <div class="profile-section-title">Note</div>
-    <textarea class="profile-note-input" rows="2" placeholder="Add a note..."></textarea>
-    <div class="profile-actions">
-      <button class="profile-btn primary">Send Message</button>
-      <button class="profile-btn secondary">More</button>
-    </div>
-  </div>
+<!-- Image URL input bar -->
+<div class="img-input-wrap" id="imgInputWrap">
+  <span style="font-size:16px; flex-shrink:0;">🖼️</span>
+  <input type="text" id="imgUrlInput" placeholder="วางลิงก์รูปภาพที่นี่..." />
+  <button class="img-input-btn" id="imgApplyBtn">อัปเดต</button>
+  <div class="img-error" id="imgError">โหลดรูปไม่ได้ ลองลิงก์อื่นนะครับ</div>
 </div>
 
 <script>
-  function switchChannel(el, id, name, topic) {
-    document.querySelectorAll('.channel-item').forEach(i => i.classList.remove('active'));
-    el.classList.add('active');
-    document.getElementById('ch-name').textContent = name;
-    document.getElementById('ch-topic').textContent = topic;
-    document.getElementById('input-placeholder').textContent = `ส่งข้อความถึง ${name}`;
-    document.querySelectorAll('[id^="ch-"]').forEach(c => {
-      if (!c.id.startsWith('ch-name') && !c.id.startsWith('ch-topic')) c.style.display = 'none';
-    });
-    const target = document.getElementById('ch-' + id);
-    if (target) target.style.display = 'block';
-    el.querySelector('.channel-badge') && (el.querySelector('.channel-badge').style.display = 'none');
+// ── Image Swap (Updated to target the img tag directly) ──
+function applyImage(url) {
+  if (!url.trim()) return;
+  const imgEl = document.getElementById('profileImg');
+  const err = document.getElementById('imgError');
+  err.style.display = 'none';
+  
+  const tempImg = new Image();
+  tempImg.onload = () => {
+    imgEl.src = url.trim();
+    anime({ targets: '#av', scale: [.85, 1], rotate: [-10, 0], duration: 500, easing: 'easeOutBack' });
+  };
+  tempImg.src = url.trim();
+}
 
-    // Typing simulation
-    const typing = document.getElementById('typing-indicator');
-    typing.style.display = 'flex';
-    setTimeout(() => { typing.style.display = 'none'; }, 2000);
-  }
+document.getElementById('imgApplyBtn').addEventListener('click', () => {
+  applyImage(document.getElementById('imgUrlInput').value);
+});
+document.getElementById('imgUrlInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') applyImage(e.target.value);
+});
+document.getElementById('imgUrlInput').addEventListener('input', () => {
+  document.getElementById('imgError').style.display = 'none';
+});
 
-  function showProfile() {
-    document.getElementById('overlay').classList.add('show');
-    document.getElementById('profile-popup').classList.add('show');
-  }
+// ── Entrance animations ──
+anime({ 
+  targets: '#av', 
+  opacity: [0, 1], 
+  rotate: [10, 0],
+  scale: [.6, 1], 
+  duration: 800, 
+  easing: 'easeOutElastic(1, .6)' 
+});
 
-  function hideProfile() {
-    document.getElementById('overlay').classList.remove('show');
-    document.getElementById('profile-popup').classList.remove('show');
-  }
+anime({
+  targets: ['#name', '#handle', '#bio'],
+  opacity: [0, 1],
+  translateY: [15, 0],
+  duration: 600,
+  delay: anime.stagger(100, { start: 200 }),
+  easing: 'easeOutQuart'
+});
 
-  // Reaction click
-  document.querySelectorAll('.reaction').forEach(r => {
-    r.addEventListener('click', function() {
-      const count = this.querySelector('.reaction-count');
-      const n = parseInt(count.textContent);
-      if (this.dataset.reacted) {
-        count.textContent = n - 1;
-        delete this.dataset.reacted;
-        this.style.background = '';
-        this.style.borderColor = '';
-      } else {
-        count.textContent = n + 1;
-        this.dataset.reacted = '1';
-        this.style.background = 'rgba(88,101,242,0.4)';
-        this.style.borderColor = 'rgba(88,101,242,0.7)';
-      }
-    });
-  });
+anime({
+  targets: '.bento-item',
+  opacity: [0, 1],
+  translateY: [30, 0],
+  duration: 700,
+  delay: anime.stagger(60, { start: 500 }),
+  easing: 'easeOutQuint'
+});
 
-  // Auto scroll to bottom
-  const area = document.getElementById('messages-area');
-  area.scrollTop = area.scrollHeight;
+anime({
+  targets: '#footer',
+  opacity: [0, 1],
+  duration: 800,
+  delay: 1200,
+  easing: 'easeOutQuart'
+});
+
+// ── Hover Glow Effect ──
+document.getElementById('bento').onmousemove = e => {
+  for(const card of document.getElementsByClassName("bento-item")) {
+    const rect = card.getBoundingClientRect(),
+          x = e.clientX - rect.left,
+          y = e.clientY - rect.top;
+    card.style.setProperty("--mouse-x", `${x}px`);
+    card.style.setProperty("--mouse-y", `${y}px`);
+  };
+}
+
+// ── Blob floating loop ──
+anime({ targets: '.blob-1', translateX: [0, 40], translateY: [0, 30], duration: 8000, direction: 'alternate', loop: true, easing: 'easeInOutSine' });
+anime({ targets: '.blob-2', translateX: [0, -40], translateY: [0, -30], duration: 10000, direction: 'alternate', loop: true, easing: 'easeInOutSine' });
+
 </script>
-
 </body>
 </html>
